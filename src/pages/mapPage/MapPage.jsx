@@ -40,9 +40,9 @@ function MapPage() {
 
 
   return (
-    <div className="bg-background min-h-screen p-6 flex h-screen gap-10">
+    <div className="p-6 flex flex-col md:flex-row md:h-screen  gap-10 w-full mx-auto">
       {/* Left Section - Event Listings */}
-      <div className="w-9/12 bg-white p-4 rounded-lg shadow-lg">
+      <div className="w-full mx-auto md:w-9/12 bg-white md:p-4 rounded-lg md:shadow-lg ">
         {/* Search Bar */}
         <div className="flex items-center space-x-4 mb-4">
           <input
@@ -60,7 +60,7 @@ function MapPage() {
               Events <span className="text-textGray">(242 results)</span>
             </h2>
             {/* Event Listings */}
-            <div className="space-y-4 h-[calc(100vh-200px)] overflow-y-auto sb-color p-1">
+            <div className="space-y-4 md:h-[calc(100vh-200px)] overflow-y-auto sb-color p-1">
               <EventCard></EventCard>
               <EventCard></EventCard>
               <EventCard></EventCard>
@@ -74,7 +74,7 @@ function MapPage() {
       </div>
 
       {/* Right Section - Static Map */}
-      <div className="w-1/2 shadow-lg rounded-2xl overflow-clip">
+      <div className="md:w-1/2 min-h-96 shadow-lg rounded-2xl overflow-hidden ">
         <Map></Map>
       </div>
     </div>

@@ -6,6 +6,7 @@
     font-optical-sizing: auto;
   }
 
+
 .text-gradient {
     background: linear-gradient(to right,
             #da22ff 0%,
@@ -54,4 +55,6 @@
     scrollbar-width: thin;
     padding-right: 12px;
   }
+  
+
   

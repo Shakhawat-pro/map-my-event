@@ -1,0 +1,12 @@
+yserver{
+	listen 80;
+	listen [::]:80;
+	
+	root /root/var/www/69.62.105.179;
+	index index.html;
+
+	
+    location / {
+        try_files $uri /index.html;
+    }
+}

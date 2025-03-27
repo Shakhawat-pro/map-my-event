@@ -9,4 +9,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    allowedHosts: [
+      'fm-conducted-amy-die.trycloudflare.com',  // Add this to allow the host
+    ],
+  }
+  
 })
