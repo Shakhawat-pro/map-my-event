@@ -28,7 +28,7 @@ const Navbar = () => {
             </div>
             <div className="navbar-end space-x-5">
                 <div>
-                    <button className='flex justify-center items-center gap-2 btn-grad px-3 py-2'>
+                    <button className='flex justify-center items-center gap-2 btn-grad px-3 py-2 hover:scale-105 cursor-pointer'>
                         <FaPlus className='text-xl' />
                         <h1 className=''>Post a event</h1>
                     </button>

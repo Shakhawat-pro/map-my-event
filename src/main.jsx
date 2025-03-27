@@ -9,6 +9,7 @@ import {
 // import Map from './components/Map.jsx';
 import HomePage from './pages/homePage/HomePage.jsx';
 import MapPage from './pages/mapPage/MapPage.jsx';
+import Footer from './Footer.jsx';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,8 @@ const router = createBrowserRouter([
       {
         path: "map",
         element: <MapPage />
-      }
+      },
+
     ]
   },
 ]);

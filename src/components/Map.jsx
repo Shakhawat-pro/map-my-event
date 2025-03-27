@@ -31,7 +31,7 @@ const AddSearchControl = () => {
     const center = [48.8566, 2.3522]; // Center of the map (France)
   
     return (
-      <div style={{ height: '100vh', width: '100%' }}>
+      <div style={{ height: '100%', width: '100%' }}>
         <MapContainer center={center} zoom={15} style={{ height: '100%', width: '100%' }}>
           {/* Add CartoDB tiles */}
           <TileLayer

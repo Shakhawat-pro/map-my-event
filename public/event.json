@@ -1,0 +1,21 @@
+[
+    {
+      "id": 1,
+      "title": "International Conference on Quantum Computing",
+      "description": "A global gathering of quantum computing experts discussing the latest advancements in quantum mechanics, algorithms, and cryptography.",
+      "location": "San Francisco, USA",
+      "total_guests": 500,
+      "category": "POPULAR",
+      "event_date": "2025-07-15",
+      "publish_date": "2025-03-01",
+      "topics": ["Strategy", "Sustainability", "Academic"],
+      "status": "Upcoming",
+      "image": "https://cdn.hellobio.com/media/amasty/blog/cache/T/e/648/339/Ten_Science_Conferences_to_Attend_18_.png",
+      "map_location": {
+        "latitude": 37.7749,
+        "longitude": -122.4194
+      }
+    }
+
+  ]
+  
