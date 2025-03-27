@@ -1,0 +1,80 @@
+{
+    "event": {
+      "title": "",
+      "description": "",
+      "eventType": "",
+      "scientificField": "",
+      "theme": "",
+      "targetAudience": [],
+      "format": "",
+      "location": "",
+      "startDate": "",
+      "endDate": "",
+      "submissionDeadline": "",
+      "registrationDeadline": "",
+      "link": "",
+      "language": "",
+      "organizer": "",
+      "tags": [],
+      "isFeatured": false,
+      "status": "",
+      "statusBadge": ""
+    },
+    
+    "filters": {
+      "eventTypes": [
+        "Colloquium",
+        "Conference",
+        "Congress",
+        "Study day",
+        "Seminar",
+        "Workshop",
+        "Summer/Winter School",
+        "Webinar"
+      ],
+      "scientificFields": [
+        "Strategic management",
+        "Marketing",
+        "Finance",
+        "Accounting / Controlling",
+        "Entrepreneurship",
+        "Information systems",
+        "Logistics / Supply Chain",
+        "Human resources",
+        "Business economics",
+        "Organization theory",
+        "Innovation",
+        "Governance"
+      ],
+      "themes": [
+        "Ecological transition",
+        "Artificial intelligence",
+        "Digitization",
+        "Inclusion / diversity",
+        "SMEs / start-ups",
+        "Sustainable finance",
+        "Ethics and CSR",
+        "Educational innovation",
+        "Critical theories",
+        "International cooperation"
+      ],
+      "targetAudiences": [
+        "PhD students",
+        "Lecturers",
+        "Master's students",
+        "Professionals/practitioners",
+        "General public"
+      ],
+      "formats": [
+        "Face-to-face",
+        "Online",
+        "Hybrid"
+      ],
+      "statuses": [
+        "Upcoming",
+        "New",
+        "Closing soon",
+        "Featured"
+      ]
+    }
+  }

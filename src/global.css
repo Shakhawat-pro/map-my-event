@@ -34,7 +34,6 @@
     transition: 0.5s;
     background-size: 200% auto;
     color: white;
-    border-radius: 26px;
     background-image: linear-gradient(to right, #da22ff 0%, #9733ee 51%, #da22ff 100% );
   }
   

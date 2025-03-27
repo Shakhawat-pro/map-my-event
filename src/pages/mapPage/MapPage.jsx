@@ -3,7 +3,8 @@ import Map from "../../components/Map";
 import LoadingModal from "../../components/LoadingModel";
 import Loading from "../../components/loading";
 
-import EventCard from "./EventCard";
+import EventCard from "../../components/EventCard";
+import Filter from "../../components/filter/Filter";
 
 
 
@@ -40,27 +41,20 @@ function MapPage() {
 
 
   return (
-    <div className="p-6 flex flex-col md:flex-row md:h-screen  gap-10 w-full mx-auto">
+    <div className="p-6 flex flex-col md:flex-row   gap-10 w-full mx-auto">
       {/* Left Section - Event Listings */}
-      <div className="w-full mx-auto md:w-9/12 bg-white md:p-4 rounded-lg md:shadow-lg ">
+      <div className="w-full mx-auto md:w-9/12 bg-white md:p-4 rounded-lg  ">
         {/* Search Bar */}
-        <div className="flex items-center space-x-4 mb-4">
-          <input
-            type="text"
-            placeholder="Search Events..."
-            className="input input-bordered w-full"
-          />
-          <button className="btn bg-primary text-white">Search</button>
-        </div>
+        <Filter></Filter>
         <Loading isLoading={loading}></Loading>
         {!loading &&
           <div>
             {/* Title */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <h2 className="text-xl font-semibold text-gray-800 my-3">
               Events <span className="text-textGray">(242 results)</span>
             </h2>
             {/* Event Listings */}
-            <div className="space-y-4 md:h-[calc(100vh-200px)] overflow-y-auto sb-color p-1">
+            <div className="space-y-4 md:h-[calc(900px-200px)] overflow-y-auto sb-color p-1">
               <EventCard></EventCard>
               <EventCard></EventCard>
               <EventCard></EventCard>
