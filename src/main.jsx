@@ -10,6 +10,9 @@ import {
 import HomePage from './pages/homePage/HomePage.jsx';
 import MapPage from './pages/mapPage/MapPage.jsx';
 import Footer from './Footer.jsx';
+import AuthProvider from './context/AuthProvider.jsx';
+import Login from './pages/Login/Login.jsx';
+import Register from './pages/Register/Register.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +27,14 @@ const router = createBrowserRouter([
         path: "map",
         element: <MapPage />
       },
+      {
+        path: "login",
+        element: <Login />
+      },
+      {
+        path: "register",
+        element: <Register />
+      },
 
     ]
   },
@@ -31,7 +42,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 
 )

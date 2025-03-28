@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import "./App.css"
 import "./global.css"
@@ -8,9 +8,12 @@ import './i18n'; // Import the i18n configuration
 
 
 const App = () => {
+  const location = useLocation()
+  const hideNavbar = ["/login", "/register"].includes(location.pathname);
+
   return (
     <div>
-      <Navbar></Navbar>
+      {!hideNavbar && <Navbar />}
       <Outlet></Outlet>
     </div>
   );
