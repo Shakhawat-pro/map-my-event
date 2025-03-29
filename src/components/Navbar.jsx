@@ -16,7 +16,7 @@ const Navbar = () => {
     const navLink = <>
         <li className='max-lg:btn'><NavLink to={'/'} className={"border-2 border-transparent"}>{t('home')}</NavLink></li>
         <li className='max-lg:btn'><NavLink to={'map'} className={"border-2 border-transparent"}>{t('find_event')}</NavLink></li>
-        <li className='max-lg:btn'><NavLink to={"item"} className={"border-2 border-transparent"}>{t('calendar')}</NavLink></li>
+        <li className='max-lg:btn'><NavLink to={"calender"} className={"border-2 border-transparent"}>{t('calendar')}</NavLink></li>
     </>
 
     return (

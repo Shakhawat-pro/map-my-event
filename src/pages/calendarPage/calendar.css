@@ -1,0 +1,46 @@
+.calendar-container {
+  max-width: 1250px;
+  margin: auto;
+  background: #f8f8f87e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.calendar-title {
+  text-align: center;
+  color: #da22ff;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* FullCalendar Theme Customization */
+.fc .fc-daygrid-event {
+  background-color: #da22ff !important;
+  color: white !important;
+  border: none !important;
+  padding: 5px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.fc .fc-toolbar-title {
+  color: #da22ff;
+  font-weight: bold;
+}
+
+.fc .fc-button {
+  background-color: #da22ff !important;
+  border: none !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.fc .fc-button:hover {
+  background-color: #b81cd9 !important; /* Slightly darker purple */
+}
+
+.fc .fc-daygrid-day-number {
+  color: #333 !important;
+  font-weight: bold;
+}

@@ -13,6 +13,7 @@ import Footer from './Footer.jsx';
 import AuthProvider from './context/AuthProvider.jsx';
 import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
+import CalenderPage from './pages/calendarPage/CalendarPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "map",
         element: <MapPage />
+      },
+      {
+        path: "calender",
+        element: <CalenderPage />
       },
       {
         path: "login",
