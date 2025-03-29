@@ -14,9 +14,9 @@ const Navbar = () => {
 
 
     const navLink = <>
-        <li><NavLink to={'/'} className={"border-2 border-transparent"}>{t('home')}</NavLink></li>
-        <li><NavLink to={'map'} className={"border-2 border-transparent"}>{t('find_event')}</NavLink></li>
-        <li><NavLink to={"item"} className={"border-2 border-transparent"}>{t('calendar')}</NavLink></li>
+        <li className='max-lg:btn'><NavLink to={'/'} className={"border-2 border-transparent"}>{t('home')}</NavLink></li>
+        <li className='max-lg:btn'><NavLink to={'map'} className={"border-2 border-transparent"}>{t('find_event')}</NavLink></li>
+        <li className='max-lg:btn'><NavLink to={"item"} className={"border-2 border-transparent"}>{t('calendar')}</NavLink></li>
     </>
 
     return (
@@ -28,7 +28,7 @@ const Navbar = () => {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-2xl border-1 border-gray-100">
+                        className="menu menu-md gap-1 dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-2xl border-1 border-gray-100">
                         {navLink}
 
                     </ul>
@@ -58,11 +58,10 @@ const Navbar = () => {
                         <h1 className='max-[330px]:hidden'>Post <span className='max-[440px]:hidden'>an event</span></h1>
                     </button>
                 </div>
-                {user !== null ?
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 sm:h-12 sm:w-12">
                             {user?.avatar_url ? (
-                                <div className="w-10 h-10 rounded-full overflow-hidden">
+                                <div className="size-12 rounded-full overflow-hidden">
                                     <img
                                         src={user?.avatar_url}
                                         referrerPolicy="no-referrer"
@@ -77,35 +76,23 @@ const Navbar = () => {
 
                             )}
                         </div>
-                        <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                            <li><a>Profile</a></li>
-                            <li><a>Settings</a></li>
-                            <li onClick={logOut}><a>Logout</a></li>
-                        </ul>
-                    </div> :
-                    <div className="dropdown dropdown-end">
-                        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 sm:h-12 sm:w-12">
-                            {user?.avatar_url ? (
-                                <div className="w-10 h-10 rounded-full overflow-hidden">
-                                    <img
-                                        src={user?.avatar_url}
-                                        referrerPolicy="no-referrer"
-                                        className="w-full h-full object-cover"
-                                        alt="User Avatar"
-                                    />
-                                </div>
-                            ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
+                        {user !== null ?
+                            <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow gap-1">
 
-                            )}
-                        </div>
-                        <ul tabIndex={0} className="menu menu-lg dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-2xl border-1 border-base-300">
-                            <li><NavLink to={'/login'}>Login</NavLink></li>
-                            <li><NavLink to={'/register'}>Register</NavLink></li>
-                        </ul>
-                    </div>}
+                                <li className='btn'><a>Profile</a></li>
+                                <li className='btn'><a>Settings</a></li>
+                                <li className='btn' onClick={logOut}><a>Logout</a></li>
+                            </ul> :
+                            <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-2xl border-1 border-base-300 gap-1" >
+                                <li className='btn'><NavLink to={'/login'}>Login</NavLink></li>
+                                <li className='btn'><NavLink to={'/register'}>Register</NavLink></li>
+                            </ul>
+                        }
+                    </div>
+
+
+
+
             </div>
         </div>
     );
