@@ -7,6 +7,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+
 .calendar-title {
   text-align: center;
   color: #da22ff;
@@ -37,10 +38,23 @@
 }
 
 .fc .fc-button:hover {
-  background-color: #b81cd9 !important; /* Slightly darker purple */
+  background-color: #b81cd9 !important;
+  /* Slightly darker purple */
 }
 
 .fc .fc-daygrid-day-number {
   color: #333 !important;
   font-weight: bold;
+}
+
+@media (max-width: 400px) {
+  .fc .fc-toolbar {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 500px) {
+  .fc .fc-daygrid-day-frame {
+    min-height: 120px;
+  }
 }
