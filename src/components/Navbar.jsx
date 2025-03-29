@@ -7,6 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext)
     const { t, i18n } = useTranslation();
+    
     const changeLanguage = () => {
         const newLang = i18n.language === 'en' ? 'fr' : 'en';
         i18n.changeLanguage(newLang);
