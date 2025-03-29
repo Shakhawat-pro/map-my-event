@@ -27,7 +27,7 @@ const AddSearchControl = () => {
       provider,
       style: 'bar',
       autoComplete: true,
-      autoCompleteDelay: 250,
+      autoCompleteDelay: 10,
       showMarker: true,
       showPopup: false,
       retainZoomLevel: false,

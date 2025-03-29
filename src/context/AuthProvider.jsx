@@ -6,9 +6,9 @@ import { AuthContext } from './AuthContext';
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+console.log(user);
+
     const [loading, setLoading] = useState(true);
-    const [demo, setDemo] =useState(null)
-console.log(demo);
 
     // Sign in with Google
     const signInWithGoogle = async () => {
@@ -17,7 +17,6 @@ console.log(demo);
             provider: 'google',
         });
         if (error) throw error;
-        setDemo(data)
         return data;
     };
 
@@ -53,7 +52,7 @@ console.log(demo);
     // Handle auth state changes
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            setUser(session?.user || null);
+            setUser(session?.user?.user_metadata || null);
             setLoading(false);
         });
 

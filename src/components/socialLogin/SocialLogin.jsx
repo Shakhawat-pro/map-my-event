@@ -31,7 +31,7 @@ const Social = () => {
     }
 
     return (
-        <div onClick={handleGoogle} className="btn w-full bg-transparent border-black "><FaGooglePlusG className="text-2xl" /> Continue with Google </div>
+        <div onClick={handleGoogle} className="btn w-full bg-transparent border-black rounded-lg"><FaGooglePlusG className="text-2xl" /> Continue with Google </div>
     );
 };
 

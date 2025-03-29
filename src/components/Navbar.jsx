@@ -11,7 +11,6 @@ const Navbar = () => {
         const newLang = i18n.language === 'en' ? 'fr' : 'en';
         i18n.changeLanguage(newLang);
     };
-    console.log(user?.user_metadata?.avatar_url);
 
 
     const navLink = <>
@@ -62,10 +61,10 @@ const Navbar = () => {
                 {user !== null ?
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 sm:h-12 sm:w-12">
-                            {user?.user_metadata?.avatar_url ? (
+                            {user?.avatar_url ? (
                                 <div className="w-10 h-10 rounded-full overflow-hidden">
                                     <img
-                                        src={user.user_metadata.avatar_url}
+                                        src={user?.avatar_url}
                                         referrerPolicy="no-referrer"
                                         className="w-full h-full object-cover"
                                         alt="User Avatar"
@@ -86,10 +85,10 @@ const Navbar = () => {
                     </div> :
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 sm:h-12 sm:w-12">
-                            {user?.user_metadata?.avatar_url ? (
+                            {user?.avatar_url ? (
                                 <div className="w-10 h-10 rounded-full overflow-hidden">
                                     <img
-                                        src={user.user_metadata.avatar_url}
+                                        src={user?.avatar_url}
                                         referrerPolicy="no-referrer"
                                         className="w-full h-full object-cover"
                                         alt="User Avatar"
@@ -102,7 +101,7 @@ const Navbar = () => {
 
                             )}
                         </div>
-                        <ul tabIndex={0} className="menu menu-lg dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-2xl border-1 border-base-300">
+                        <ul tabIndex={0} className="menu menu-lg dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-2xl border-1 border-base-300">
                             <li><NavLink to={'/login'}>Login</NavLink></li>
                             <li><NavLink to={'/register'}>Register</NavLink></li>
                         </ul>

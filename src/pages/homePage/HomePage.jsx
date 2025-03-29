@@ -21,7 +21,7 @@ const HomePage = () => {
                     <NavLink to={"map"}>
                         <button className='btn-grad text-white rounded-[10px] w-[170px] text-lg py-2 font-semibold hover:scale-115 cursor-pointer'>Find an event</button>
                     </NavLink>
-                    <button className='rounded-[10px] bg-white border-1 border-black w-[170px] text-lg py-2 font-semibold hover:scale-105 cursor-pointer'>Post an event</button>
+                    <button className='rounded-[10px] bg-white border-1 border-black w-[170px] text-lg py-2 font-semibold hover:scale-115 duration-300  cursor-pointer'>Post an event</button>
                 </div>
 
             </div>
