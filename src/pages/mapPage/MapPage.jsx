@@ -34,7 +34,7 @@ function MapPage() {
         <Filter></Filter>
         <Loading isLoading={loading}></Loading>
         <div className="shadow-lg rounded-2xl overflow-hidden min-md:hidden mt-2">
-          <Map></Map>
+        <Map events={events} selectedEvent={selectedEvent} />
         </div>
         {!loading && (
           <div>
@@ -43,7 +43,7 @@ function MapPage() {
               Events <span className="text-textGray">({events.length} results)</span>
             </h2>
             {/* Event Listings */}
-            <div className="space-y-7 md:h-[calc(900px-200px)] overflow-y-auto sb-color p-1">
+            <div className="space-y-7 md:h-[calc(900px-200px)] overflow-y-auto sb-color md:pr-3">
               {events.map((event, index) => (
                 <EventCard key={index} event={event} setSelectedEvent={setSelectedEvent}  />
               ))}

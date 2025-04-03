@@ -4,6 +4,7 @@ import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-geosearch/dist/geosearch.css';
+import ResizeMap from '../utils/ResizeMap';
 
 // Default marker icon setup
 const DefaultIcon = L.icon({
@@ -121,7 +122,7 @@ const EventMarker = ({ event }) => {
 
 const Map = ({ events = [], selectedEvent }) => {
   const defaultCenter = [52.5200, 13.4050]; // Berlin coordinates
-  const defaultZoom = 5; // Wider zoom to show multiple European locations
+  const defaultZoom = 10; // Wider zoom to show multiple European locations
 
   // Filter events with valid coordinates
   const eventsWithCoords = events.filter(event => {
@@ -135,8 +136,10 @@ const Map = ({ events = [], selectedEvent }) => {
     <MapContainer
       center={defaultCenter}
       zoom={defaultZoom}
-      className="min-h-96 h-full w-full"
+      className="min-h-96 h-full w-full "
     >
+        <ResizeMap />
+
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://carto.com/">Carto</a>'
@@ -147,7 +150,7 @@ const Map = ({ events = [], selectedEvent }) => {
 
       {eventsWithCoords.map(event => (
         <EventMarker
-          key={`${event.title}-${event.city}`}
+          key={`${event.id}-${event.city}`}
           event={event}
         />
       ))}

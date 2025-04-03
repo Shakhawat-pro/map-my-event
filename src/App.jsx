@@ -5,6 +5,7 @@ import "./App.css"
 import "./global.css"
 import EventCard from './components/EventCard';
 import './i18n'; // Import the i18n configuration
+import { LanguageProvider } from './context/LanguageProvider';
 
 
 const App = () => {
@@ -12,10 +13,14 @@ const App = () => {
   const hideNavbar = ["/login", "/register"].includes(location.pathname);
 
   return (
-    <div>
-      {!hideNavbar && <Navbar />}
-      <Outlet></Outlet>
-    </div>
+    <LanguageProvider>
+
+      <div>
+        {!hideNavbar && <Navbar />}
+        <Outlet></Outlet>
+      </div>
+    </LanguageProvider>
+
   );
 };
 
