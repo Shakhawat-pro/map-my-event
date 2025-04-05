@@ -80,10 +80,10 @@ const Navbar = () => {
           </span>
         </div>
         <div>
-          <button className='flex items-center justify-center rounded-full  min-[440px]:rounded-[11px]  p-1.5  gap-2 btn-grad min-[440px]:px-3 min-[440px]:py-1.5 sm:py-[7px] hover:scale-105 cursor-pointer'>
+          <NavLink to="/post-event" className='flex items-center justify-center rounded-full  min-[440px]:rounded-[11px]  p-1.5  gap-2 btn-grad min-[440px]:px-3 min-[440px]:py-1.5 sm:py-[7px] hover:scale-105 cursor-pointer'>
             <FaPlus className='text-xl border-2 rounded-full p-[2px] min-[440px]:mt-0.5' />
             <h1 className='max-[330px]:hidden text-sm whitespace-nowrap max-[440px]:hidden'>{t('common.post_event')}</h1>
-          </button>
+          </NavLink>
         </div>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 sm:h-12 sm:w-12">

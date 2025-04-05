@@ -14,7 +14,6 @@ const App = () => {
 
   return (
     <LanguageProvider>
-
       <div>
         {!hideNavbar && <Navbar />}
         <Outlet></Outlet>

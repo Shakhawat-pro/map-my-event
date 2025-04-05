@@ -14,6 +14,11 @@ import AuthProvider from './context/AuthProvider.jsx';
 import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
 import CalenderPage from './pages/calendarPage/CalendarPage.jsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import EventDetails from './pages/eventDetails/EventDetails.jsx';
+import PostEvent from './pages/PostEvent/PostEvent.jsx';
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -40,6 +45,14 @@ const router = createBrowserRouter([
         path: "register",
         element: <Register />
       },
+      {
+        path: "event/:id",
+        element: <EventDetails />
+      },
+      {
+        path: "post-event",
+        element: <PostEvent />
+      }
 
     ]
   },
@@ -47,9 +60,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>
-
 )
