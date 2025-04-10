@@ -1,51 +1,109 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios"; // Import axios
+import React, { useState, useEffect } from "react";
 import Map from "../../components/Map";
-import LoadingModal from "../../components/LoadingModel";
 import Loading from "../../components/loading";
 import EventCard from "../../components/EventCard";
 import Filter from "../../components/filter/Filter";
+import useApprovedEvents from "../../hooks/useApprovedEvents";
 
 function MapPage() {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [events, error, isLoading] = useApprovedEvents();
+  const [filteredEvents, setFilteredEvents] = useState([]);
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get("/dummy.json"); // Using axios instead of fetch
-        setEvents(response.data);
-        setLoading(false);
-      } catch (err) {
-        alert(err.message)
-        setLoading(false);
-      }
-    };
+    setFilteredEvents(events);
+  }, [events]);
 
-    fetchEvents();
-  }, []);
+  const applyFilters = (filterData) => {
+    const filtered = events.filter(event => {
+      // Search query (title or description)
+      if (filterData.searchQuery) {
+        const searchLower = filterData.searchQuery.toLowerCase();
+        if (!event.title.toLowerCase().includes(searchLower) &&
+            !event.description.toLowerCase().includes(searchLower)) {
+          return false;
+        }
+      }
+
+      // Location
+      if (filterData.location) {
+        const locationLower = filterData.location.toLowerCase();
+        if (!event.location.toLowerCase().includes(locationLower) &&
+            !event.city.toLowerCase().includes(locationLower)) {
+          return false;
+        }
+      }
+
+      // Event type
+      if (filterData.eventType && event.eventType !== filterData.eventType) {
+        return false;
+      }
+
+      // Scientific field
+      if (filterData.field && event.scientificField !== filterData.field.value) {
+        return false;
+      }
+
+      // Date range - convert all dates to Date objects and compare timestamps
+      if (filterData.startDate) {
+        const eventStart = new Date(event.startDate);
+        const filterStart = new Date(filterData.startDate);
+        if (eventStart.getTime() <= filterStart.getTime()) return false;
+      }
+      if (filterData.endDate) {
+        const eventEnd = new Date(event.endDate || event.startDate);
+        const filterEnd = new Date(filterData.endDate);
+        if (eventEnd.getTime() >= filterEnd.getTime()) return false;
+      }
+
+      // Format
+      if (filterData.format && event.format !== filterData.format) {
+        return false;
+      }
+
+      // Tags
+      if (filterData.tags.length > 0) {
+        const selectedTags = filterData.tags.map(tag => tag.value);
+        if (!selectedTags.some(tag => event.tags.includes(tag))) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    setFilteredEvents(filtered);
+  };
+
+  const resetFilters = () => {
+    setFilteredEvents(events);
+  };
 
   return (
     <div className="p-2 sm:p-6 flex flex-col md:flex-row gap-10 w-full mx-auto">
       {/* Left Section - Event Listings */}
       <div className="w-full mx-auto md:w-9/12 bg-white md:p-4 rounded-lg">
-        {/* Search Bar */}
-        <Filter></Filter>
-        <Loading isLoading={loading}></Loading>
+        <Filter onFilter={applyFilters} onReset={resetFilters} />
+        
+        {error && <p className="text-red-500 my-3">{error.message}</p>}
+
         <div className="shadow-lg rounded-2xl overflow-hidden min-md:hidden mt-2">
-        <Map events={events} selectedEvent={selectedEvent} />
+          <Map events={filteredEvents} selectedEvent={selectedEvent} />
         </div>
-        {!loading && (
+
+        <Loading isLoading={isLoading} />
+        {!isLoading && (
           <div>
-            {/* Title */}
             <h2 className="text-xl font-semibold text-gray-800 my-3">
-              Events <span className="text-textGray">({events.length} results)</span>
+              Events <span className="text-textGray">({filteredEvents.length} results)</span>
             </h2>
-            {/* Event Listings */}
             <div className="space-y-7 md:h-[calc(900px-200px)] overflow-y-auto sb-color md:pr-3">
-              {events.map((event, index) => (
-                <EventCard key={index} event={event} setSelectedEvent={setSelectedEvent}  />
+              {filteredEvents.map((event) => (
+                <EventCard 
+                  key={event._id} 
+                  event={event} 
+                  setSelectedEvent={setSelectedEvent} 
+                />
               ))}
             </div>
           </div>
@@ -53,8 +111,8 @@ function MapPage() {
       </div>
 
       {/* Right Section - Static Map */}
-      <div className="md:w-1/2 min-h-96 shadow-lg rounded-2xl overflow-hidden max-md::hidden">
-        <Map events={events} selectedEvent={selectedEvent}></Map>
+      <div className="md:w-1/2 min-h-96 shadow-lg rounded-2xl overflow-hidden max-md:hidden">
+        <Map events={filteredEvents} selectedEvent={selectedEvent} />
       </div>
     </div>
   );

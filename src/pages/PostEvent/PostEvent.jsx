@@ -59,7 +59,7 @@ const PostEvent = () => {
       const currentArray = prev[name] || [];
       return {
         ...prev,
-        [name]: checked 
+        [name]: checked
           ? [...currentArray, value]
           : currentArray.filter(item => item !== value)
       };
@@ -91,6 +91,34 @@ const PostEvent = () => {
     'Bilingual'
   ];
 
+  const scientificFieldOption = [
+    "Management",
+    "Strategic Management",
+    "Marketing",
+    "Finance",
+    "Accounting & Control",
+    "Entrepreneurship",
+    "Human Resources",
+    "Organizational Theory",
+    "Information Systems",
+    "Innovation & Technology Management",
+    "Public Management",
+    "International Management",
+    "Supply Chain & Logistics",
+    "Corporate Social Responsibility (CSR)",
+    "Sustainability & Environmental Management",
+    "Health Management",
+    "Education Management",
+    "Tourism & Hospitality",
+    "Digital Transformation",
+    "Ethics & Governance",
+    "Behavioral Sciences",
+    "Economics of Organizations",
+    "Family Business",
+    "Business Law & Regulation"
+  ];
+
+
   return (
     <div className="container max-w-[850px] mx-auto px-4 py-8">
       <div className="bg-base-100 rounded-lg shadow-lg overflow-hidden">
@@ -106,7 +134,7 @@ const PostEvent = () => {
                 <BookOpen className="text-primary" />
                 Basic Information
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                 <div className="form-control flex flex-col gap-1 ">
                   <label className="label ">
@@ -175,7 +203,7 @@ const PostEvent = () => {
                 <Calendar className="text-primary" />
                 Dates
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
@@ -183,7 +211,7 @@ const PostEvent = () => {
                   </label>
                   <DatePicker
                     selected={eventData.startDate ? new Date(eventData.startDate) : null}
-                    onChange={(date) => setEventData(prev => ({...prev, startDate: date}))}
+                    onChange={(date) => setEventData(prev => ({ ...prev, startDate: date }))}
                     className="input input-bordered w-full"
                     dateFormat="MMMM d, yyyy"
                     required
@@ -196,7 +224,7 @@ const PostEvent = () => {
                   </label>
                   <DatePicker
                     selected={eventData.endDate ? new Date(eventData.endDate) : null}
-                    onChange={(date) => setEventData(prev => ({...prev, endDate: date}))}
+                    onChange={(date) => setEventData(prev => ({ ...prev, endDate: date }))}
                     className="input input-bordered w-full"
                     dateFormat="MMMM d, yyyy"
                     minDate={eventData.startDate ? new Date(eventData.startDate) : null}
@@ -210,7 +238,7 @@ const PostEvent = () => {
                   </label>
                   <DatePicker
                     selected={eventData.submissionDeadline ? new Date(eventData.submissionDeadline) : null}
-                    onChange={(date) => setEventData(prev => ({...prev, submissionDeadline: date}))}
+                    onChange={(date) => setEventData(prev => ({ ...prev, submissionDeadline: date }))}
                     className="input input-bordered w-full"
                     dateFormat="MMMM d, yyyy"
                   />
@@ -222,7 +250,7 @@ const PostEvent = () => {
                   </label>
                   <DatePicker
                     selected={eventData.registrationDeadline ? new Date(eventData.registrationDeadline) : null}
-                    onChange={(date) => setEventData(prev => ({...prev, registrationDeadline: date}))}
+                    onChange={(date) => setEventData(prev => ({ ...prev, registrationDeadline: date }))}
                     className="input input-bordered w-full"
                     dateFormat="MMMM d, yyyy"
                   />
@@ -238,7 +266,7 @@ const PostEvent = () => {
                 <MapPin className="text-primary" />
                 Location
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
@@ -329,7 +357,7 @@ const PostEvent = () => {
                 <GraduationCap className="text-primary" />
                 Academic Information
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
@@ -343,10 +371,9 @@ const PostEvent = () => {
                     required
                   >
                     <option value="">Select a field</option>
-                    <option value="Strategic management">Strategic management</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Entrepreneurship">Entrepreneurship</option>
-                    <option value="Finance">Finance</option>
+                    {scientificFieldOption.map(lang => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -395,7 +422,7 @@ const PostEvent = () => {
                 <Users className="text-primary" />
                 Organizer Information
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
@@ -421,7 +448,7 @@ const PostEvent = () => {
                     onChange={(e) => {
                       const options = [...e.target.selectedOptions];
                       const values = options.map(option => option.value);
-                      setEventData(prev => ({...prev, tags: values}));
+                      setEventData(prev => ({ ...prev, tags: values }));
                     }}
                     multiple
                     className="select select-bordered h-auto"

@@ -28,6 +28,11 @@
 }
 
 
+.custom-divider {
+  border-bottom: 2px solid white;
+}
+
+
   .btn-grad {
     text-align: center;
     transition: 0.5s;
@@ -67,3 +72,38 @@
   
 
   
+
+  .pagination{
+    display: flex;
+    gap: 20px;
+    color: black;
+    font-weight: 600;
+}
+
+  .pagination a{
+    text-decoration: none;
+    color: black;
+  }
+
+  .pagination a.active{
+    color: #ff00d9;
+  }
+
+  .pagination a:hover{
+    color: #ff00d9;
+    cursor: pointer;
+  }
+
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #aa2ef2;
+    border-radius: 10px;
+  }
+
+
+ 

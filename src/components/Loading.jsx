@@ -4,7 +4,7 @@ const Loading = ({ isLoading }) => {
     }
 
     return (
-        <div className=" flex items-center justify-center">
+        <div className=" flex items-center justify-center shadow-lg  mt-1">
             <div className="bg-white p-6 rounded-md flex items-center">
                 <span className="loading loading-spinner w-20 text-[#9733ee]"></span>
                 <p className="ml-4 text-lg">Please wait...</p>

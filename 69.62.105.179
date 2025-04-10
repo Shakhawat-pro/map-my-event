@@ -1,8 +1,8 @@
-yserver{
+server{
 	listen 80;
 	listen [::]:80;
 	
-	root /root/var/www/69.62.105.179;
+	root /var/www/69.62.105.179;
 	index index.html;
 
 	

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -9,6 +9,9 @@ import { Calendar, MapPin, Users, Globe, Tag, Clock } from 'lucide-react';
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import { useParams } from 'react-router-dom';
+import Loading from '../../components/loading';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -17,20 +20,24 @@ L.Icon.Default.mergeOptions({
   shadowUrl
 });
 
-const fetchEvent = async (id) => {
-  const response = await fetch('/dummy.json');
-  const data = await response.json();
-  return data.find(event => event.id === id);
-};
+const EventDetails = () => {
+  const { id } = useParams();
 
-const EventDetails = ({ eventId = 1 }) => {
+  const axiosPublic = useAxiosPublic();
+
   const { data: event, isLoading, isError } = useQuery({
-    queryKey: ['event', eventId],
-    queryFn: () => fetchEvent(eventId)
+    queryKey: ['event', id],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/events/${id}`);
+      return res.data.data;
+    },
   });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  if (isLoading) return <Loading isLoading={true} />;
 
-  if (isLoading) return <div className="text-center py-8">Loading event details...</div>;
-  if (isError) return <div className="text-center py-8 text-error">Error loading event</div>;
+  if (isError || !event) return <div className="text-center py-8 text-error">Error loading event</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -90,9 +97,9 @@ const EventDetails = ({ eventId = 1 }) => {
               <div className="mb-6">
                 <h3 className="text-xl font-semibold mb-2">Location Map</h3>
                 <div className="h-64 rounded-lg overflow-hidden">
-                  <MapContainer 
-                    center={[event.coordinates.latitude, event.coordinates.longitude]} 
-                    zoom={13} 
+                  <MapContainer
+                    center={[event.coordinates.latitude, event.coordinates.longitude]}
+                    zoom={13}
                     style={{ height: '100%', width: '100%' }}
                   >
                     <TileLayer

@@ -1,122 +1,231 @@
-[
-    {
-        "id": 1,
-        "title": "International Conference on Sustainable Business Practices",
-        "description": "A 3-day conference exploring innovative approaches to sustainability in modern business environments.",
-        "detailDescription": "This conference will gather experts in the field of sustainability to discuss strategies and solutions for achieving ecological transition within business practices. Attendees will have opportunities to participate in discussions and networking sessions.",
-        "eventType": "Conference",
-        "scientificField": "Strategic management",
-        "theme": "Ecological transition",
-        "targetAudience": ["PhD students", "Professionals/practitioners"],
-        "format": "Hybrid",
-        "location": "Paris, France - Sorbonne Business School",
-        "city": "Paris",
-        "coordinates": {
-            "latitude": 48.8492,
-            "longitude": 2.3431
+{
+    "success": true,
+    "message": "Events fetched successfully",
+    "size": 6,
+    "data": [
+        {
+            "coordinates": {
+                "latitude": null,
+                "longitude": null
+            },
+            "_id": "67ef7425c849fe308408dc12",
+            "title": "AI in Marketing Workshop",
+            "description": "Hands-on workshop covering practical applications of artificial intelligence in digital marketing strategies.",
+            "detailDescription": "This online workshop will provide participants with insights into how AI is transforming digital marketing strategies. The session will focus on real-world case studies and practical applications of AI technologies such as machine learning, data analysis, and automation tools.",
+            "eventType": "Workshop",
+            "scientificField": "Marketing",
+            "theme": "Artificial intelligence",
+            "targetAudience": [
+                "Master's students",
+                "Professionals/practitioners"
+            ],
+            "format": "Online",
+            "location": "Virtual",
+            "city": "Virtual",
+            "startDate": "2023-10-05T00:00:00.000Z",
+            "endDate": "2023-10-05T00:00:00.000Z",
+            "submissionDeadline": "2023-09-20T00:00:00.000Z",
+            "registrationDeadline": "2023-09-30T00:00:00.000Z",
+            "link": "https://aimarketing-workshop.com",
+            "language": "English",
+            "organizer": "Digital Marketing Institute",
+            "tags": [
+                "AI",
+                "Digital Transformation",
+                "Machine Learning"
+            ],
+            "isFeatured": false,
+            "status": "approved",
+            "statusBadge": "Closing Soon",
+            "submittedBy": "marketing@dmi.edu",
+            "isApprover": false,
+            "createdAt": "2025-04-04T05:54:45.055Z",
+            "updatedAt": "2025-04-04T05:54:45.055Z",
+            "__v": 0
         },
-        "startDate": "2025-11-25",
-        "endDate": "2025-12-01",
-        "submissionDeadline": "2025-09-30",
-        "registrationDeadline": "2025-10-31",
-        "link": "https://sustainability-conference.edu",
-        "language": "English",
-        "organizer": "European Business Research Association",
-        "tags": ["Sustainability", "CSR", "Green Business"],
-        "isFeatured": true,
-        "status": "approved",
-        "statusBadge": "New",
-        "submittedBy": "admin@business-events.org",
-        "isApprover": true
-    },
-    {
-        "id": 2,
-        "title": "Global Marketing Strategies Workshop" ,
-        "description": "Hands-on workshop focusing on the latest trends in global marketing strategies.",
-        "detailDescription": "This workshop will provide participants with practical tools and insights into the latest trends in global marketing strategies. Attendees will engage in case studies and group discussions to enhance their understanding of international marketing.",
-        "eventType": "Workshop",
-        "scientificField": "Marketing",
-        "theme": "Global Marketing",
-        "targetAudience": ["Master's students", "Professionals/practitioners"],
-        "format": "Face-to-face",
-        "location": "New York, USA - Marketing Institute",
-        "city": "New York",
-        "coordinates": {
-            "latitude": 40.7128,
-            "longitude": -74.0060
+        {
+            "coordinates": {
+                "latitude": null,
+                "longitude": null
+            },
+            "_id": "67ef742bc849fe308408dc14",
+            "title": "AI in Marketing Workshop",
+            "description": "Hands-on workshop covering practical applications of artificial intelligence in digital marketing strategies.",
+            "detailDescription": "This online workshop will provide participants with insights into how AI is transforming digital marketing strategies. The session will focus on real-world case studies and practical applications of AI technologies such as machine learning, data analysis, and automation tools.",
+            "eventType": "Workshop",
+            "scientificField": "Marketing",
+            "theme": "Artificial intelligence",
+            "targetAudience": [
+                "Master's students",
+                "Professionals/practitioners"
+            ],
+            "format": "Online",
+            "location": "Virtual",
+            "city": "Virtual",
+            "startDate": "2023-10-05T00:00:00.000Z",
+            "endDate": "2023-10-05T00:00:00.000Z",
+            "submissionDeadline": "2023-09-20T00:00:00.000Z",
+            "registrationDeadline": "2023-09-30T00:00:00.000Z",
+            "link": "https://aimarketing-workshop.com",
+            "language": "English",
+            "organizer": "Digital Marketing Institute",
+            "tags": [
+                "AI",
+                "Digital Transformation",
+                "Machine Learning"
+            ],
+            "isFeatured": false,
+            "status": "approved",
+            "statusBadge": "Closing Soon",
+            "submittedBy": "marketing@dmi.edu",
+            "isApprover": false,
+            "createdAt": "2025-04-04T05:54:51.008Z",
+            "updatedAt": "2025-04-04T05:54:51.008Z",
+            "__v": 0
         },
-        "startDate": "2025-08-15",
-        "endDate": "2025-08-17",
-        "submissionDeadline": "2025-06-30",
-        "registrationDeadline": "2025-07-31",
-        "link": "https://marketing-workshop.org",
-        "language": "English",
-        "organizer": "Global Marketing Association",
-        "tags": ["Marketing Trends", "Global Strategies", "Case Studies"],
-        "isFeatured": false,
-        "status": "approved",
-        "statusBadge": "New", 
-        "submittedBy": "events@entrepreneur-network.eu",
-        "isApprover": true
-    },
-    {
-        "id": 3,
-        "title": "Entrepreneurship Winter School",
-        "description": "Intensive 1-week program for aspiring entrepreneurs with mentorship from industry leaders.",
-        "detailDescription": "This immersive program will equip students with essential entrepreneurial skills and knowledge required to launch and grow successful startups. Industry leaders will mentor participants through real-life business challenges.",
-        "eventType": "Summer/Winter School",
-        "scientificField": "Entrepreneurship",
-        "theme": "SMEs / start-ups",
-        "targetAudience": ["Master's students", "PhD students"],
-        "format": "Face-to-face",
-        "location": "Berlin, Germany - Innovation Hub",
-        "city": "Berlin",
-        "coordinates": {
-            "latitude": 52.5200,
-            "longitude": 13.4050
+        {
+            "coordinates": {
+                "latitude": null,
+                "longitude": null
+            },
+            "_id": "67ef7ade6045f66fb8e5ef65",
+            "title": "AI in Marketing Workshop",
+            "description": "Hands-on workshop covering practical applications of artificial intelligence in digital marketing strategies.",
+            "detailDescription": "This online workshop will provide participants with insights into how AI is transforming digital marketing strategies. The session will focus on real-world case studies and practical applications of AI technologies such as machine learning, data analysis, and automation tools.",
+            "eventType": "Workshop",
+            "scientificField": "Marketing",
+            "theme": "Artificial intelligence",
+            "targetAudience": [
+                "Master's students",
+                "Professionals/practitioners"
+            ],
+            "format": "Online",
+            "location": "Virtual",
+            "city": "Virtual",
+            "startDate": "2023-10-05T00:00:00.000Z",
+            "endDate": "2023-10-05T00:00:00.000Z",
+            "submissionDeadline": "2023-09-20T00:00:00.000Z",
+            "registrationDeadline": "2023-09-30T00:00:00.000Z",
+            "language": "English",
+            "organizer": "Digital Marketing Institute",
+            "tags": [
+                "AI",
+                "Digital Transformation",
+                "Machine Learning"
+            ],
+            "isFeatured": false,
+            "status": "approved",
+            "statusBadge": "Closing Soon",
+            "submittedBy": "marketing@dmi.edu",
+            "isApprover": false,
+            "createdAt": "2025-04-04T06:23:26.564Z",
+            "updatedAt": "2025-04-04T06:23:26.564Z",
+            "__v": 0
         },
-        "startDate": "2026-01-08",
-        "endDate": "2026-01-12",
-        "submissionDeadline": "2025-11-15",
-        "registrationDeadline": "2025-12-01",
-        "link": "https://winter-entrepreneurship.edu",
-        "language": "Bilingual",
-        "organizer": "European Entrepreneurship Network",
-        "tags": ["Startups", "Venture Capital", "Business Planning"],
-        "isFeatured": true,
-        "status": "pending",
-        "statusBadge": "Upcoming",
-        "submittedBy": "events@entrepreneur-network.eu",
-        "isApprover": true
-    },
-    {
-        "id": 4,
-        "title": "Digital Transformation in Finance Seminar",
-        "description": "Deep dive into financial technology innovations and digital transformation strategies.",
-        "detailDescription": "This seminar explores the latest fintech innovations and digital transformation strategies reshaping the finance industry. Leading experts will present case studies on blockchain, AI applications, and digital banking solutions.",
-        "eventType": "Seminar",
-        "scientificField": "Finance",
-        "theme": "Financial Technology",
-        "targetAudience": ["Professionals/practitioners", "Researchers/academics"],
-        "format": "Hybrid",
-        "location": "London, UK - Financial District",
-        "city": "London",
-        "coordinates": {
-            "latitude": 51.5074,
-            "longitude": -0.1278
+        {
+            "coordinates": {
+                "latitude": 48.8492,
+                "longitude": 2.3431
+            },
+            "_id": "67f4ff4801503fe7c1308615",
+            "title": "International Conference on Sustainable Business Practices",
+            "description": "A 3-day conference exploring innovative approaches to sustainability in modern business environments.",
+            "detailDescription": "This conference will gather experts in the field of sustainability to discuss strategies and solutions for achieving ecological transition within business practices. Attendees will have opportunities to participate in discussions and networking sessions.",
+            "eventType": "Conference",
+            "scientificField": "Strategic management",
+            "theme": "Ecological transition",
+            "targetAudience": [
+                "PhD students",
+                "Professionals/practitioners"
+            ],
+            "format": "Hybrid",
+            "location": "Paris, France - Sorbonne Business School",
+            "city": "Paris",
+            "startDate": "2025-11-25T00:00:00.000Z",
+            "endDate": "2025-12-01T00:00:00.000Z",
+            "submissionDeadline": "2025-09-30T00:00:00.000Z",
+            "registrationDeadline": "2025-10-31T00:00:00.000Z",
+            "link": "https://sustainability-conference.edu",
+            "language": "English",
+            "organizer": "European Business Research Association",
+            "tags": [
+                "Sustainability",
+                "CSR",
+                "Green Business"
+            ],
+            "status": "approved",
+            "statusBadge": "New",
+            "submittedBy": "admin@business-events.org"
         },
-        "startDate": "2025-07-10",
-        "endDate": "2025-07-12",
-        "submissionDeadline": "2025-05-30",
-        "registrationDeadline": "2025-06-30",
-        "link": "https://fintech-seminar.org",
-        "language": "English",
-        "organizer": "FinTech Association",
-        "tags": ["Digital Banking", "Blockchain", "AI in Finance"],
-        "isFeatured": false,
-        "status": "approved",
-        "statusBadge": "New",
-        "submittedBy": "contact@fintech-assoc.org",
-        "isApprover": false
-    }
-]
+        {
+            "coordinates": {
+                "latitude": 40.7128,
+                "longitude": -74.006
+            },
+            "_id": "67f4ff4801503fe7c1308616",
+            "title": "Global Marketing Strategies Workshop",
+            "description": "Hands-on workshop focusing on the latest trends in global marketing strategies.",
+            "detailDescription": "This workshop will provide participants with practical tools and insights into the latest trends in global marketing strategies. Attendees will engage in case studies and group discussions to enhance their understanding of international marketing.",
+            "eventType": "Workshop",
+            "scientificField": "Marketing",
+            "theme": "Global Marketing",
+            "targetAudience": [
+                "Master's students",
+                "Professionals/practitioners"
+            ],
+            "format": "Face-to-face",
+            "location": "New York, USA - Marketing Institute",
+            "city": "New York",
+            "startDate": "2025-08-15T00:00:00.000Z",
+            "endDate": "2025-08-17T00:00:00.000Z",
+            "submissionDeadline": "2025-06-30T00:00:00.000Z",
+            "registrationDeadline": "2025-07-31T00:00:00.000Z",
+            "link": "https://marketing-workshop.org",
+            "language": "English",
+            "organizer": "Global Marketing Association",
+            "tags": [
+                "Marketing Trends",
+                "Global Strategies",
+                "Case Studies"
+            ],
+            "status": "approved",
+            "statusBadge": "New",
+            "submittedBy": "events@entrepreneur-network.eu"
+        },
+        {
+            "coordinates": {
+                "latitude": 51.5074,
+                "longitude": -0.1278
+            },
+            "_id": "67f4ff4801503fe7c1308618",
+            "title": "Digital Transformation in Finance Seminar",
+            "description": "Deep dive into financial technology innovations and digital transformation strategies.",
+            "detailDescription": "This seminar explores the latest fintech innovations and digital transformation strategies reshaping the finance industry. Leading experts will present case studies on blockchain, AI applications, and digital banking solutions.",
+            "eventType": "Seminar",
+            "scientificField": "Finance",
+            "theme": "Financial Technology",
+            "targetAudience": [
+                "Professionals/practitioners",
+                "Researchers/academics"
+            ],
+            "format": "Hybrid",
+            "location": "London, UK - Financial District",
+            "city": "London",
+            "startDate": "2025-07-10T00:00:00.000Z",
+            "endDate": "2025-07-12T00:00:00.000Z",
+            "submissionDeadline": "2025-05-30T00:00:00.000Z",
+            "registrationDeadline": "2025-06-30T00:00:00.000Z",
+            "link": "https://fintech-seminar.org",
+            "language": "English",
+            "organizer": "FinTech Association",
+            "tags": [
+                "Digital Banking",
+                "Blockchain",
+                "AI in Finance"
+            ],
+            "status": "approved",
+            "statusBadge": "New",
+            "submittedBy": "contact@fintech-assoc.org"
+        }
+    ]
+}

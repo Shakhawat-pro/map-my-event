@@ -17,6 +17,11 @@ import CalenderPage from './pages/calendarPage/CalendarPage.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import EventDetails from './pages/eventDetails/EventDetails.jsx';
 import PostEvent from './pages/PostEvent/PostEvent.jsx';
+import Dashboard from './pages/Dashboard/Dashboard.jsx';
+import AdminHome from './pages/Dashboard/AdminHome.jsx';
+import ManageEvents from './pages/Dashboard/ManageEvents.jsx';
+import ManageUser from './pages/Dashboard/manageUser.jsx';
+import ManageHomePage from './pages/Dashboard/manageHomePage.jsx';
 
 const queryClient = new QueryClient();
 
@@ -53,9 +58,30 @@ const router = createBrowserRouter([
         path: "post-event",
         element: <PostEvent />
       }
-
     ]
   },
+  {
+    path: 'dashboard',
+    element: <Dashboard></Dashboard>,
+    children: [
+      {
+        path: '/dashboard',
+        element: <AdminHome></AdminHome>
+      },
+      {
+        path: 'manageUser',
+        element: <ManageUser></ManageUser>
+      },
+      {
+        path: 'manageEvents',
+        element: <ManageEvents></ManageEvents>
+      },
+      {
+        path: 'manageHomePage',
+        element: <ManageHomePage></ManageHomePage>
+      }
+    ]
+  }
 ]);
 
 createRoot(document.getElementById('root')).render(

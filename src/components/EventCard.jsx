@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const EventCard = ({ event, setSelectedEvent }) => {
     const navigate = useNavigate();
 
+    
     const handleClick = () => {
         if (event.format === "Online" || !event.coordinates) {
             Swal.fire({
@@ -23,6 +24,10 @@ const EventCard = ({ event, setSelectedEvent }) => {
             setSelectedEvent(event);
         }
     };
+    
+    const handleNavigate = (id) => {
+        navigate(`/event/${id}`)
+    }
 
 
     const formatEventDates = (startDate, endDate) => {
@@ -133,7 +138,7 @@ const EventCard = ({ event, setSelectedEvent }) => {
                         </svg>
 
                         <button
-                            onClick={() => navigate(`/event/${event.id}`)}
+                            onClick={() => handleNavigate(event._id)}
                             className="whitespace-nowrap px-4 py-2 bg-white text-black border-1 border-base-300 shadow-xs flex flex-row items-center justify-center gap-1 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer hover:border-black hover:shadow-xl"
                         >
                             More info <FiExternalLink />
@@ -164,7 +169,7 @@ const EventCard = ({ event, setSelectedEvent }) => {
                 </div>
                 <div className='space-y-2 flex flex-row  items-center h-fit gap-2 lg:hidden mt-5'>
                     <button
-                        onClick={() => navigate(`/event/${event.id}`)}
+                        onClick={() => handleNavigate(event._id)}
                         className="px-4 py-2 m-0 bg-white text-black border-1 border-base-300 shadow-xs flex flex-row items-center justify-center gap-1 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer hover:border-black hover:shadow-xl"
                     >
                         More info <FiExternalLink />
