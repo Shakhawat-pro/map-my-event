@@ -140,7 +140,7 @@ const ManageEvents = () => {
                 ) : (
                     <div>
                         <div className="overflow-x-auto rounded-t-lg">
-                            <table className="table">
+                            <table className="table table-zebra">
                                 <thead>
                                     <tr className="bg-gradient-to-r from-primary to-secondary text-white uppercase inter">
                                         <th></th>

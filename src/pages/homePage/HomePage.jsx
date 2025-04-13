@@ -2,64 +2,43 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
-import 'swiper/css';  
+import 'swiper/css';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import { useQuery } from '@tanstack/react-query';
 
-
-
-// Sample data for the Deadline Alerts, Upcoming Events, and Popular Topics
-const deadlineData = [
-  { title: "Submit to AIMS 2025", deadline: "by March 30" },
-  { title: "Apply for TechCon 2025", deadline: "by April 15" },
-  { title: "Submit Abstract for EGOS 2025", deadline: "by May 5" },
-];
-
-const upcomingEventData = [
-  { title: "EGOS 2025 - Paris", date: "July 2–5" },
-  { title: "TechCon 2025 - New York", date: "September 10–12" },
-  { title: "AI Summit 2025 - London", date: "October 1–3" },
-];
-
-const popularTopicData = [
-  { title: "Management & Strategy" },
-  { title: "Data Science & AI" },
-  { title: "Blockchain & FinTech" },
-];
 
 const HomePage = () => {
+  const axiosPublic = useAxiosPublic();
 
 
-  // const [deadlines, setDeadlines] = useState([]);
-  // const [events, setEvents] = useState([]);
-  // const [topics, setTopics] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const { data: deadlines, isLoading: deadlinesLoading } = useQuery({
+    queryKey: ['deadlines'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/homePage/deadlines');
+      return res.data.data;
+    },
+    staleTime: 5 * 60 * 1000 // 5 minutes
+  });
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const [deadlinesRes, eventsRes, topicsRes] = await Promise.all([
-  //         axios.get('/deadlines'),
-  //         axios.get('/upcoming-events'),
-  //         axios.get('/popular-topics')
-  //       ]);
-        
-  //       setDeadlines(deadlinesRes.data.data);
-  //       setEvents(eventsRes.data.data);
-  //       setTopics(topicsRes.data.data);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const { data: upcomingEvents, isLoading: eventsLoading } = useQuery({
+    queryKey: ['upcomingEvents'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/homePage/upcoming-events');
+      return res.data.data;
+    },
+    staleTime: 5 * 60 * 1000 // 5 minutes
+  });
 
-  //   fetchData();
-  // }, []);
+  const { data: topics, isLoading: topicsLoading } = useQuery({
+    queryKey: ['topics'],
+    queryFn: async () => {
+      const res = await axiosPublic.get('/homePage/popular-topics');
+      return res.data.data;
+    },
+    staleTime: 5 * 60 * 1000 // 5 minutes
+  });
 
-  // if (loading) {
-  //   return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  // }
-
-
+  const loading = deadlinesLoading || eventsLoading || topicsLoading;
 
 
   return (
@@ -94,12 +73,21 @@ const HomePage = () => {
               modules={[Autoplay, Pagination]}
               className="mt-4"
             >
-              {upcomingEventData.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h2>
-                  <p className="text-base text-gray-600">{item.date}</p>
+              {loading ? (
+                <SwiperSlide className="flex justify-center items-center">
+                  <div className="flex flex-col gap-4">
+                    <div className="skeleton h-4 w-full"></div>
+                    <div className="skeleton h-4 w-full"></div>
+                  </div>
                 </SwiperSlide>
-              ))}
+              ) : (
+                upcomingEvents.map((item, index) => (
+                  <SwiperSlide key={index}>
+                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h2>
+                    <p className="text-base text-gray-600">{item.date}</p>
+                  </SwiperSlide>
+                ))
+              )}
             </Swiper>
           </div>
 
@@ -115,11 +103,20 @@ const HomePage = () => {
               modules={[Autoplay]}
               className="mt-4"
             >
-              {popularTopicData.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h2>
+              {loading ? (
+                <SwiperSlide className="flex justify-center items-center">
+                  <div className="flex flex-col gap-4">
+                    <div className="skeleton h-4 w-full"></div>
+                    <div className="skeleton h-4 w-full"></div>
+                  </div>
                 </SwiperSlide>
-              ))}
+              ) : (
+                topics.map((item, index) => (
+                  <SwiperSlide key={index}>
+                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h2>
+                  </SwiperSlide>
+                ))
+              )}
             </Swiper>
           </div>
 
@@ -135,12 +132,20 @@ const HomePage = () => {
               modules={[Autoplay]}
               className="mt-4"
             >
-              {deadlineData.map((item, index) => (
-                <SwiperSlide key={index} className="mb-4">
-                  <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h2>
-                  <p className="text-base text-gray-600">{item.deadline}</p>
+              {loading ? (
+                <SwiperSlide className="flex justify-center items-center">
+                  <div className="flex flex-col gap-4">
+                    <div className="skeleton h-4 w-full"></div>
+                    <div className="skeleton h-4 w-full"></div>
+                  </div>
                 </SwiperSlide>
-              ))}
+              ) : (
+                deadlines.map((item, index) => (
+                  <SwiperSlide key={index} className="mb-4">
+                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h2>
+                    <p className="text-base text-gray-600">{item.deadline}</p>
+                  </SwiperSlide>
+                )))}
             </Swiper>
           </div>
         </div>
@@ -150,4 +155,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-          

@@ -146,7 +146,7 @@ const ManageUser = () => {
                 ) : (
                     <div>
                         <div className="overflow-x-auto rounded-t-lg ">
-                            <table className="table">
+                            <table className="table table-zebra">
                                 <thead>
                                     <tr className=" bg-gradient-to-r from-primary to-secondary text-white uppercase inter ">
                                         <th></th>
@@ -177,25 +177,25 @@ const ManageUser = () => {
                                                 {item.role === 'admin' ? (
                                                     <button
                                                         onClick={() => handleRemoveAdmin(item)}
-                                                        className="btn  bg-green-500 tooltip"
+                                                        className="btn btn-sm bg-green-100 text-green-800 hover:bg-green-200 tooltip"
                                                         data-tip="Admin"
                                                     >
-                                                        <GrUserAdmin className="text-white text-2xl" />
+                                                        <GrUserAdmin />
                                                     </button>
                                                 ) : (
                                                     <button
                                                         onClick={() => handleMakeAdmin(item)}
-                                                        className="btn  bg-orange-500 tooltip"
+                                                        className="btn btn-sm bg-orange-100 text-orange-800 hover:bg-orange-200 tooltip"
                                                         data-tip="Guest user"
                                                     >
-                                                        <FaUsers className="text-white text-2xl" />
+                                                        <FaUsers />
                                                     </button>
                                                 )}
                                             </td>
                                             <th>
                                                 <button
                                                     onClick={() => handleDelete(item._id)}
-                                                    className="btn border-2 w-full btn-ghost px-0 text-red-600 text-center text-xl sm:text-3xl "
+                                                    className="btn btn-sm bg-red-100 text-red-800 hover:bg-red-200"
                                                 >
                                                     <FaTrashAlt />
                                                 </button>

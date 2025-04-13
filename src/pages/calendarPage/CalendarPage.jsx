@@ -18,7 +18,7 @@ const EventCalendar = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get("/dummy.json");
-        const formattedEvents = response.data.map(event => ({
+        const formattedEvents = response?.data?.map(event => ({
           title: event.title,
           start: event.startDate,
           end: event.endDate || event.startDate,
