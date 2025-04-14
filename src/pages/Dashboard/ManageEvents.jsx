@@ -6,6 +6,7 @@ import { FaTrashAlt, FaCalendarAlt, FaEye, FaCheck, FaTimes } from "react-icons/
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useNavigate } from "react-router-dom";
+import { QueryClient } from "@tanstack/react-query";
 
 const ManageEvents = () => {
     const navigate = useNavigate();
@@ -15,6 +16,9 @@ const ManageEvents = () => {
 
     const handlePageClick = (event) => {
         setCurrentPage(event.selected + 1);
+    };
+    const handleSuccess = () => {
+        refetch(); // Always refetch after successful operation
     };
 
     const approveEvent = (event) => {
@@ -33,12 +37,12 @@ const ManageEvents = () => {
                 axiosPublic.patch(`/events/approve/${event._id}`)
                     .then(res => {
                         if (res.data.modifiedCount > 0) {
+                            handleSuccess();
                             Swal.fire({
                                 title: "Approved!",
                                 text: "The event has been approved.",
                                 icon: "success"
                             });
-                            refetch();
                         }
                     })
                     .catch((error) => {
@@ -68,12 +72,12 @@ const ManageEvents = () => {
                 axiosPublic.patch(`/events/reject/${event._id}`)
                     .then(res => {
                         if (res.data.modifiedCount > 0) {
+                            handleSuccess();
                             Swal.fire({
                                 title: "Rejected!",
                                 text: "The event has been removed.",
                                 icon: "success"
                             });
-                            refetch();
                         }
                     })
                     .catch(() => {
@@ -101,12 +105,12 @@ const ManageEvents = () => {
                 axiosPublic.delete(`/events/${id}`)
                     .then(res => {
                         if (res.data.deletedCount > 0) {
+                            handleSuccess();
                             Swal.fire({
                                 title: "Deleted!",
                                 text: "The event has been deleted.",
                                 icon: "success"
                             });
-                            refetch();
                         }
                     })
                     .catch(() => {

@@ -32,6 +32,8 @@ const EventDetails = () => {
       return res.data.data;
     },
   });
+  console.log(event);
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -126,10 +128,10 @@ const EventDetails = () => {
           <div className="space-y-4">
             <div className="card bg-base-200">
               <div className="card-body">
-                <h3 className="card-title">Register</h3>
+                <h3 className="card-title">Submission</h3>
                 <p className="flex items-center gap-2">
                   <Clock className="text-primary" />
-                  Deadline: {new Date(event?.registrationDeadline).toLocaleDateString()}
+                  Deadline: {new Date(event?.submissionDeadline).toLocaleDateString()}
                 </p>
                 <div className="card-actions justify-end mt-4">
                   <button className="btn btn-primary">Register Now</button>

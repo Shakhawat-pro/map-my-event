@@ -5,7 +5,6 @@ const AdminHome = () => {
         { title: 'Total Users', value: 1254, change: '+12%' },
         { title: 'Total Events', value: 342, change: '+5%' },
         { title: 'Active Events', value: 128, change: '-3%' },
-        { title: 'Revenue', value: '$12,540', change: '+8%' }
     ];
 
     return (
@@ -21,17 +20,6 @@ const AdminHome = () => {
                         </p>
                     </div>
                 ))}
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-                <div className="space-y-4">
-                    {[1, 2, 3, 4, 5].map(item => (
-                        <div key={item} className="border-b pb-3">
-                            <p className="text-gray-600">User #{item} created a new event</p>
-                            <p className="text-sm text-gray-400">2 hours ago</p>
-                        </div>
-                    ))}
-                </div>
             </div>
         </div>
     );

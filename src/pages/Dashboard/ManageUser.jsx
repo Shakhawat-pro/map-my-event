@@ -12,7 +12,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const ManageUser = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const { users, totalUsers, totalPages, isLoading } = useAllUsers(currentPage);
+    const { users, totalUsers, totalPages, isLoading, refetch } = useAllUsers(currentPage);
     console.log({users});
     
     // const axiosSecure = useAxiosSecure();
@@ -35,8 +35,9 @@ const ManageUser = () => {
             if (result.isConfirmed) {
                 axiosPublic.delete(`/users/${id}`)
                     .then(res => {
-                        if (res.data.deletedCount > 0) {
-                            // refetch();
+                        console.log(res)
+                        if (res.data.success === true) {
+                            refetch()
                             Swal.fire({
                                 title: "Deleted!",
                                 text: "Your file has been deleted.",
@@ -61,8 +62,8 @@ const ManageUser = () => {
             if (result.isConfirmed) {
                 axiosPublic.patch(`/users/admin/${item._id}`)
                     .then(res => {
-                        if (res.data.modifiedCount > 0) {
-                            // refetch();
+                        if (res.data.success === true) {
+                            refetch();
                             Swal.fire({
                                 title: "Success!",
                                 text: "Role has been changed to Admin.",
@@ -102,8 +103,8 @@ const ManageUser = () => {
             if (result.isConfirmed) {
                 axiosPublic.patch(`/users/guest/${item._id}`)
                     .then(res => {
-                        if (res.data.modifiedCount > 0) {
-                            // refetch();
+                        if (res.data.success === true) {
+                            refetch();
                             Swal.fire({
                                 title: "Success!",
                                 text: "Role has been changed to Guest.",

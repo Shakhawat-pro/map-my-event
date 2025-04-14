@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import supabase from '../utils/supabase';
 import { AuthContext } from './AuthContext';
+import useAxiosPublic from '../hooks/useAxiosPublic';
 
 // Initialize Supabase client
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-// console.log(user);
 
     const [loading, setLoading] = useState(true);
+    const axiosPublic = useAxiosPublic();
+
 
     // Sign in with Google
     const signInWithGoogle = async () => {
@@ -51,9 +53,32 @@ const AuthProvider = ({ children }) => {
 
     // Handle auth state changes
     useEffect(() => {
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            setUser(session?.user?.user_metadata || null);
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            const userData = session?.user?.user_metadata || null;
+            setUser(userData);
+            
             setLoading(false);
+            if (userData?.email) {
+                try {
+                    const res = await axiosPublic.get(`/users/${userData.email}`);
+                    if (!res.data) {
+                        // User doesn't exist in MongoDB
+                        const newUser = {
+                            email: userData.email,
+                            name: userData.full_name,
+                            profilePicture: userData.avatar_url,
+                        };
+                        console.log(newUser);
+                        
+                        await axiosPublic.post('/users/create-user', newUser);
+                        console.log('User saved to MongoDB');
+                    } else {
+                        console.log('User already exists in MongoDB');
+                    }
+                } catch (err) {
+                    console.error('Error checking/saving user:', err);
+                }
+            }
         });
 
         return () => {

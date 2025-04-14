@@ -16,8 +16,8 @@ const Navbar = () => {
     <li ><NavLink to={'/'} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.home')}</NavLink></li>
     <li ><NavLink to={'map'} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.find_event')}</NavLink></li>
     <li ><NavLink to={"calender"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.calendar')}</NavLink></li>
-    <li ><NavLink to={"dashboard"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>Dashboard</NavLink></li>
-  </>;
+    <li ><NavLink to={"dashboard"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent hidden"}>Dashboard</NavLink></li>
+  </>
 
   return (
     <div className="mx-auto navbar bg-base-100 shadow-sm p-1 md:px-5 max-sm:justify-between">
