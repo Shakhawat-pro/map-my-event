@@ -5,6 +5,7 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 25px;
 }
 
 
@@ -46,6 +47,18 @@
   color: #333 !important;
   font-weight: bold;
 }
+
+/* Pointer cursor on hover */
+.fc-event {
+  cursor: pointer;
+}
+
+/* Change background color on hover */
+.fc-event:hover {
+  background-color: #ad00cf !important; /* Replace with any color */
+  color: white; /* Optional: text color change */
+}
+
 
 @media (max-width: 400px) {
   .fc .fc-toolbar {

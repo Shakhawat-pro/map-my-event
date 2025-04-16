@@ -88,7 +88,12 @@ const EventMarker = ({ event }) => {
         <div className="space-y-1">
           <h3 className="font-bold text-lg">{event.title}</h3>
           <p><strong>Location:</strong> {event.location || 'N/A'}, {event.city || 'N/A'}</p>
-          <p><strong>Dates:</strong> {event.startDate || 'N/A'} to {event.endDate || 'N/A'}</p>
+          <p>
+            <strong>Dates:</strong>{" "}
+            {event.startDate ? new Date(event.startDate).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
+            {" "}to{" "}
+            {event.endDate ? new Date(event.endDate).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
+          </p>
           <p><strong>Format:</strong> {event.format || 'N/A'}</p>
           <p><strong>Organizer:</strong> {event.organizer || 'N/A'}</p>
           <span className={`px-2.5 py-1 in rounded-full text-xs border-1 font-semibold flex items-center gap-1 w-fit ${event.statusBadge === "Upcoming"
@@ -138,7 +143,7 @@ const Map = ({ events = [], selectedEvent }) => {
       zoom={defaultZoom}
       className="min-h-96 h-full w-full "
     >
-        <ResizeMap />
+      <ResizeMap />
 
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"

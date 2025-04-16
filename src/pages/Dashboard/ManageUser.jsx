@@ -13,7 +13,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 const ManageUser = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const { users, totalUsers, totalPages, isLoading, refetch } = useAllUsers(currentPage);
-    console.log({users});
+    // console.log({users});
     
     // const axiosSecure = useAxiosSecure();
     const axiosPublic = useAxiosPublic();
@@ -35,7 +35,7 @@ const ManageUser = () => {
             if (result.isConfirmed) {
                 axiosPublic.delete(`/users/${id}`)
                     .then(res => {
-                        console.log(res)
+                        // console.log(res)
                         if (res.data.success === true) {
                             refetch()
                             Swal.fire({
@@ -60,7 +60,9 @@ const ManageUser = () => {
             confirmButtonText: "Yes, Change it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axiosPublic.patch(`/users/admin/${item._id}`)
+                // console.log("clicked");
+                
+                axiosPublic.patch(`/users/role/admin/${item._id}`)
                     .then(res => {
                         if (res.data.success === true) {
                             refetch();
@@ -101,7 +103,7 @@ const ManageUser = () => {
             confirmButtonText: "Yes, Change it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axiosPublic.patch(`/users/guest/${item._id}`)
+                axiosPublic.patch(`/users/role/guest/${item._id}`)
                     .then(res => {
                         if (res.data.success === true) {
                             refetch();

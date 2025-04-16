@@ -174,7 +174,7 @@ const PostEvent = () => {
         registrationDeadline: eventData.registrationDeadline?.toISOString(),
         coordinates: eventData.format !== 'Online' ? eventData.coordinates : null
       };
-console.log("--------------",payload);
+// console.log("--------------",payload);
 
       await axios.post('http://localhost:5000/api/events/', payload);
       await Swal.fire({

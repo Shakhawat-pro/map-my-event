@@ -7,6 +7,7 @@ import useAxiosPublic from '../hooks/useAxiosPublic';
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    console.log(user);
 
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
@@ -56,7 +57,7 @@ const AuthProvider = ({ children }) => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             const userData = session?.user?.user_metadata || null;
             setUser(userData);
-            
+
             setLoading(false);
             if (userData?.email) {
                 try {
@@ -68,8 +69,8 @@ const AuthProvider = ({ children }) => {
                             name: userData.full_name,
                             profilePicture: userData.avatar_url,
                         };
-                        console.log(newUser);
-                        
+                        // console.log(newUser);
+
                         await axiosPublic.post('/users/create-user', newUser);
                         console.log('User saved to MongoDB');
                     } else {
@@ -84,7 +85,7 @@ const AuthProvider = ({ children }) => {
         return () => {
             subscription?.unsubscribe();
         };
-    }, []);
+    }, [axiosPublic]);
 
     const authInfo = {
         user,

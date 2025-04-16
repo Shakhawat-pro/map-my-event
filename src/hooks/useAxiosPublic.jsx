@@ -1,13 +1,16 @@
 import axios from 'axios';
+import { useMemo } from 'react';
 
 const useAxiosPublic = () => {
-    const axiosPublic = axios.create({
-        baseURL: "http://localhost:5000/api",
-        // baseURL: "https://map-server-brown.vercel.app/api",
-        // baseURL: import.meta.env.VITE_BASE_URL
+  const axiosPublic = useMemo(() => {
+    return axios.create({
+      // baseURL: "http://localhost:5000/api",
+      baseURL: "https://map-server-brown.ve/rcel.app/api",
+      // baseURL: import.meta.env.VITE_BASE_URL
     });
+  }, []);
 
-    return axiosPublic
+  return axiosPublic;
 };
 
 export default useAxiosPublic;

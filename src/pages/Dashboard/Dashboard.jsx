@@ -34,7 +34,7 @@ const Dashboard = () => {
                         <li><NavLink className={'flex items-center gap-2'} to={'/'}><FaHome /> Home</NavLink></li>
                         <li><NavLink className={'flex items-center gap-2'} to={'/post-event'}><FiEdit />Post Event</NavLink></li>
                         <li><NavLink className={'flex items-center gap-2'} to={'/map'}><GiNewspaper />Find Event</NavLink></li>
-                        <li><NavLink className={'flex items-center gap-2'} to={'/calendar'}><MdOutlineWorkspacePremium /> Calendar</NavLink></li>
+                        <li><NavLink className={'flex items-center gap-2'} to={'/calender'}><MdOutlineWorkspacePremium /> Calendar</NavLink></li>
                     </ul>
                 </div>
             </div>

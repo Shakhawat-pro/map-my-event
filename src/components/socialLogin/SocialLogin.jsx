@@ -10,24 +10,24 @@ const Social = () => {
 
     const handleGoogle = () => {
         signInWithGoogle()
-            .then(result => {
-                console.log(result);
-                // const userInfo = {
-                //     email: result.user?.email,
-                //     name: result.user?.displayName,
-                //     profilePicture: result.user?.photoURL,
-                //     role: 'user',
-                //     premiumTaken: null
-                // }
+            // .then(result => {
+            //     console.log(result);
+            //     // const userInfo = {
+            //     //     email: result.user?.email,
+            //     //     name: result.user?.displayName,
+            //     //     profilePicture: result.user?.photoURL,
+            //     //     role: 'user',
+            //     //     premiumTaken: null
+            //     // }
 
-                // axiosPublic.post('/users', userInfo)
-                //     .then((res) => {
-                //         console.log(res.data);
-                //         {
-                //             location.state ? navigate(location.state) : navigate('/')
-                //         }
-                //     })
-            })
+            //     // axiosPublic.post('/users', userInfo)
+            //     //     .then((res) => {
+            //     //         console.log(res.data);
+            //     //         {
+            //     //             location.state ? navigate(location.state) : navigate('/')
+            //     //         }
+            //     //     })
+            // })
     }
 
     return (

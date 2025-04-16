@@ -32,7 +32,7 @@ const ManageEvents = () => {
             confirmButtonText: "Yes, approve it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log(event._id);
+                // console.log(event._id);
 
                 axiosPublic.patch(`/events/approve/${event._id}`)
                     .then(res => {
@@ -45,9 +45,7 @@ const ManageEvents = () => {
                             });
                         }
                     })
-                    .catch((error) => {
-                        console.log(error);
-
+                    .catch(() => {
                         Swal.fire({
                             title: "Error",
                             text: "Failed to approve event",
@@ -124,8 +122,30 @@ const ManageEvents = () => {
         });
     };
 
+    const updateStatusBadge = (eventId, newStatus) => {
+        axiosPublic.patch(`/events/statusBadge/${eventId}`, { statusBadge: newStatus })
+            .then(res => {
+                if (res.data?.event) {
+                    handleSuccess();
+                    Swal.fire({
+                        title: 'Updated!',
+                        text: `Status badge changed to "${newStatus}"`,
+                        icon: 'success',
+                    });
+                }
+            })
+            .catch(() => {
+                Swal.fire({
+                    title: "Error",
+                    text: "Failed to update status badge",
+                    icon: "error"
+                });
+            });
+    };
+
+
     const viewEvent = (id) => {
-        console.log(`Viewing event ${id}`);
+        // console.log(`Viewing event ${id}`);
         navigate(`/event/${id}`)
         // TODO: Implement view functionality
     };
@@ -143,7 +163,7 @@ const ManageEvents = () => {
                     <p>Loading...</p>
                 ) : (
                     <div>
-                        <div className="overflow-x-auto rounded-t-lg">
+                        <div className="overflow-x-auto rounded-t-lg ">
                             <table className="table table-zebra">
                                 <thead>
                                     <tr className="bg-gradient-to-r from-primary to-secondary text-white uppercase inter">
@@ -152,6 +172,7 @@ const ManageEvents = () => {
                                         <th>Location</th>
                                         <th>Date</th>
                                         <th>Status</th>
+                                        <th>Status Badge</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -162,7 +183,7 @@ const ManageEvents = () => {
                                             <td className="font-bold">{event.title}</td>
                                             <td>{event.location}</td>
                                             <td>{new Date(event.startDate).toLocaleDateString()}</td>
-                                            <td>
+                                            <td className=" ">
                                                 <span className={`badge ${event.status === 'approved' ?
                                                     'bg-emerald-100 text-emerald-800' :
                                                     event.status === 'pending' ?
@@ -171,40 +192,61 @@ const ManageEvents = () => {
                                                     {event.status}
                                                 </span>
                                             </td>
-                                            <td className="flex gap-2">
-                                                <button
-                                                    onClick={() => viewEvent(event._id)}
-                                                    className="btn btn-sm bg-blue-100 text-blue-800 hover:bg-blue-200"
-                                                    title="View"
+                                            <td className=" ">
+                                                <select
+                                                    className={`px-3 py-1.5 rounded-md text-sm font-semibold focus:outline-none focus:ring-2
+                                                      ${event.statusBadge === 'New' && 'bg-blue-100 text-blue-800'}
+                                                      ${event.statusBadge === 'Upcoming' && 'bg-yellow-100 text-yellow-800'}
+                                                      ${event.statusBadge === 'Closing Soon' && 'bg-orange-100 text-orange-800'}
+                                                      ${event.statusBadge === 'Ended' && 'bg-red-100 text-red-800'}
+                                                     `}
+                                                    value={event.statusBadge}
+                                                    onChange={(e) => updateStatusBadge(event._id, e.target.value)}
                                                 >
-                                                    <FaEye />
-                                                </button>
-                                                {event.status === 'pending' && (
-                                                    <>
-                                                        <button
-                                                            onClick={() => approveEvent(event)}
-                                                            className="btn btn-sm bg-green-100 text-green-800 hover:bg-green-200"
-                                                            title="Approve"
-                                                        >
-                                                            <FaCheck />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => rejectEvent(event)}
-                                                            className="btn btn-sm bg-orange-100 text-orange-800 hover:bg-orange-200"
-                                                            title="Reject"
-                                                        >
-                                                            <FaTimes />
-                                                        </button>
-                                                    </>
-                                                )}
-                                                <button
-                                                    onClick={() => deleteEvent(event._id)}
-                                                    className="btn btn-sm bg-red-100 text-red-800 hover:bg-red-200"
-                                                    title="Delete"
-                                                >
-                                                    <FaTrashAlt />
-                                                </button>
+                                                    <option value="New">New</option>
+                                                    <option value="Upcoming">Upcoming</option>
+                                                    <option value="Closing Soon">Closing Soon</option>
+                                                    <option value="Ended">Ended</option>
+                                                </select>
                                             </td>
+
+                                            <td >
+                                                <div className="flex items-center gap-2 h-full">
+                                                    <button
+                                                        onClick={() => viewEvent(event._id)}
+                                                        className="btn btn-sm bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                                        title="View"
+                                                    >
+                                                        <FaEye />
+                                                    </button>
+                                                    {event.status === 'pending' && (
+                                                        <>
+                                                            <button
+                                                                onClick={() => approveEvent(event)}
+                                                                className="btn btn-sm bg-green-100 text-green-800 hover:bg-green-200"
+                                                                title="Approve"
+                                                            >
+                                                                <FaCheck />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => rejectEvent(event)}
+                                                                className="btn btn-sm bg-orange-100 text-orange-800 hover:bg-orange-200"
+                                                                title="Reject"
+                                                            >
+                                                                <FaTimes />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    <button
+                                                        onClick={() => deleteEvent(event._id)}
+                                                        className="btn btn-sm bg-red-100 text-red-800 hover:bg-red-200"
+                                                        title="Delete"
+                                                    >
+                                                        <FaTrashAlt />
+                                                    </button>
+                                                </div>
+                                            </td>
+
                                         </tr>
                                     ))}
                                 </tbody>

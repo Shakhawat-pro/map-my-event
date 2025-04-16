@@ -22,6 +22,9 @@ import AdminHome from './pages/Dashboard/AdminHome.jsx';
 import ManageEvents from './pages/Dashboard/ManageEvents.jsx';
 import ManageUser from './pages/Dashboard/manageUser.jsx';
 import ManageHomePage from './pages/Dashboard/manageHomePage.jsx';
+import ErrorPage from './pages/errorPage/ErrorPage.jsx';
+import Profile from './pages/Profile/Profile.jsx';
+import LegalPage from './pages/legalPage/LegalPage.jsx';
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App></App>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         path: "/",
@@ -57,6 +61,14 @@ const router = createBrowserRouter([
       {
         path: "post-event",
         element: <PostEvent />
+      },
+      {
+        path: "profile",
+        element: <Profile />
+      },
+      {
+        path: "mentions-legales",
+        element: <LegalPage />
       }
     ]
   },

@@ -3,21 +3,24 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CreatableSelect from 'react-select/creatable';
+import "./filter.css";
+
 
 const Filter = ({ onFilter, onReset }) => {
   const [formData, setFormData] = useState({
     searchQuery: "",
     location: "",
-    eventType: "",
+    eventType: [],
     field: null,
     startDate: null,
     endDate: null,
-    format: "",
+    format: [],
     tags: [],
   });
+  // console.log(formData);
+
 
   const eventTypeOptions = [
-    { value: "", label: "All types" },
     { value: "Conference", label: "Conference" },
     { value: "Seminar", label: "Seminar" },
     { value: "Workshop", label: "Workshop" },
@@ -25,11 +28,11 @@ const Filter = ({ onFilter, onReset }) => {
   ];
 
   const formatOptions = [
-    { value: "", label: "Any format" },
     { value: "In-person", label: "In-person" },
     { value: "Online", label: "Online" },
     { value: "Hybrid", label: "Hybrid" }
   ];
+
 
   const scientificFieldOptions = [
     "Management", "Marketing", "Finance", "Accounting & Control",
@@ -122,14 +125,16 @@ const Filter = ({ onFilter, onReset }) => {
             Event Type
           </label>
           <Select
+            isMulti
             name="eventType"
             id="eventType"
             options={eventTypeOptions}
-            value={eventTypeOptions.find(opt => opt.value === formData.eventType)}
-            onChange={(selected) => handleSelectChange(selected?.value || "", { name: "eventType" })}
-            className="basic-single"
+            value={formData.eventType}
+            onChange={(selected) => handleSelectChange(selected || [], { name: "eventType" })}
+            className="basic-multi-select"
             classNamePrefix="select"
-            isClearable={false}
+            menuPortalTarget={document.body}
+            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
           />
         </div>
 
@@ -149,7 +154,25 @@ const Filter = ({ onFilter, onReset }) => {
             classNamePrefix="select"
           />
         </div>
-
+        {/* Format */}
+        <div className="flex-1 min-w-[120px]">
+          <label htmlFor="format" className="block text-xs text-gray-500 mb-1">
+            Format
+          </label>
+          <Select
+            isMulti
+            name="format"
+            id="format"
+            options={formatOptions}
+            value={formData.format}
+            onChange={(selected) => handleSelectChange(selected || [], { name: "format" })}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            c
+            menuPortalTarget={document.body}
+            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+          />
+        </div>
         {/* Start Date */}
         <div className="flex-1 min-w-[120px]">
           <label className="block text-xs text-gray-500 mb-1">
@@ -183,23 +206,6 @@ const Filter = ({ onFilter, onReset }) => {
           />
         </div>
 
-        {/* Format */}
-        <div className="flex-1 min-w-[120px]">
-          <label htmlFor="format" className="block text-xs text-gray-500 mb-1">
-            Format
-          </label>
-          <Select
-            name="format"
-            id="format"
-            options={formatOptions}
-            value={formatOptions.find(opt => opt.value === formData.format)}
-            onChange={(selected) => handleSelectChange(selected?.value || "", { name: "format" })}
-            className="basic-single"
-            classNamePrefix="select"
-            isClearable={false}
-          />
-        </div>
-
         {/* Tags */}
         <div className="flex-1 min-w-[120px]">
           <label htmlFor="tags" className="block text-xs text-gray-500 mb-1">
@@ -214,6 +220,8 @@ const Filter = ({ onFilter, onReset }) => {
             onChange={(selected) => handleSelectChange(selected || [], { name: "tags" })}
             className="basic-multi-select"
             classNamePrefix="select"
+            menuPortalTarget={document.body}
+            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
           />
         </div>
 

@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Map from "../../components/Map";
 import Loading from "../../components/loading";
 import EventCard from "../../components/EventCard";
 import Filter from "../../components/filter/Filter";
 import useApprovedEvents from "../../hooks/useApprovedEvents";
+import { AuthContext } from "../../context/AuthContext";
 
 function MapPage() {
+  const { user } = useContext(AuthContext);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, error, isLoading] = useApprovedEvents();
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -26,13 +28,13 @@ function MapPage() {
       }
 
       // Location
-      if (filterData.location) {
-        const locationLower = filterData.location.toLowerCase();
-        if (!event.location.toLowerCase().includes(locationLower) &&
-            !event.city.toLowerCase().includes(locationLower)) {
-          return false;
-        }
-      }
+if (filterData.location) {
+  const locationLower = filterData.location.toLowerCase();
+  if (!(event.location?.toLowerCase()?.includes(locationLower) || event.city?.toLowerCase()?.includes(locationLower))) {
+    return false;
+  }
+}
+
 
       // Event type
       if (filterData.eventType && event.eventType !== filterData.eventType) {
@@ -102,6 +104,7 @@ function MapPage() {
                 <EventCard 
                   key={event._id} 
                   event={event} 
+                  currentUser={user}
                   setSelectedEvent={setSelectedEvent} 
                 />
               ))}

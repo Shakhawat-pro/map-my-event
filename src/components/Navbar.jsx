@@ -106,7 +106,6 @@ const Navbar = () => {
           {user !== null ?
             <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow gap-1">
               <li className='btn'><a>{t('common.profile')}</a></li>
-              <li className='btn'><a>{t('common.settings')}</a></li>
               <li className='btn' onClick={logOut}><a>{t('common.logout')}</a></li>
             </ul> :
             <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-2xl border-1 border-base-300 gap-1" >

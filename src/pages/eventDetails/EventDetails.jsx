@@ -32,7 +32,7 @@ const EventDetails = () => {
       return res.data.data;
     },
   });
-  console.log(event);
+  // console.log(event);
   
   useEffect(() => {
     window.scrollTo(0, 0);

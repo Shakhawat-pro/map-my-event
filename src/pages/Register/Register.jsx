@@ -24,26 +24,20 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         const fullName = e.target.fullName.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
-
         try {
-            
             // 1. Upload image to Cloudinary
             const formData = new FormData();
             formData.append("file", selectedFile);
             formData.append("upload_preset", "unsigned_upload"); // Your Cloudinary preset
-
             const cloudinaryRes = await axios.post(
                 "https://api.cloudinary.com/v1_1/dsgzlelwc/image/upload", // Cloudinary API endpoint
                 formData
             );
-
             const imageUrl = cloudinaryRes.data.secure_url;
             console.log("Image uploaded:", imageUrl);
-
             // 2. Register user with Supabase
             const { data, error } = await supabase.auth.signUp({
                 email,
@@ -150,7 +144,7 @@ const Register = () => {
             </div>
 
             {/* Loading Modal */}
-            <LoadingModal isLoading={loading}/>
+            <LoadingModal isLoading={loading} />
         </div>
     );
 };
