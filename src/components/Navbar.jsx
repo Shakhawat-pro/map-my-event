@@ -16,7 +16,7 @@ const Navbar = () => {
     <li ><NavLink to={'/'} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.home')}</NavLink></li>
     <li ><NavLink to={'map'} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.find_event')}</NavLink></li>
     <li ><NavLink to={"calender"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.calendar')}</NavLink></li>
-    <li ><NavLink to={"dashboard"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent hidden"}>Dashboard</NavLink></li>
+    <li ><NavLink to={"dashboard"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent hidden"}>{t('common.dashboard')}</NavLink></li>
   </>
 
   return (
@@ -88,10 +88,10 @@ const Navbar = () => {
         </div>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 sm:h-12 sm:w-12">
-            {user?.avatar_url ? (
+            {user?.profilePicture ? (
               <div className="size-12 rounded-full overflow-hidden">
                 <img
-                  src={user?.avatar_url}
+                  src={user?.profilePicture}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                   alt="User Avatar"
@@ -105,7 +105,7 @@ const Navbar = () => {
           </div>
           {user !== null ?
             <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow gap-1">
-              <li className='btn'><a>{t('common.profile')}</a></li>
+              <li className='btn'><NavLink to={'/profile'}>{t('common.profile')}</NavLink></li>
               <li className='btn' onClick={logOut}><a>{t('common.logout')}</a></li>
             </ul> :
             <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-2xl border-1 border-base-300 gap-1" >

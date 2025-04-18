@@ -5,11 +5,11 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
-
+import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
+  const { t } = useTranslation();
   const axiosPublic = useAxiosPublic();
-
 
   const { data: deadlines, isLoading: deadlinesLoading } = useQuery({
     queryKey: ['deadlines'],
@@ -40,22 +40,23 @@ const HomePage = () => {
 
   const loading = deadlinesLoading || eventsLoading || topicsLoading;
 
-
   return (
-    <div className='md:h-[calc(100vh-100px)] flex flex-col justify-center  items-center gap-20 mx-2'>
+    <div className='md:h-[calc(100vh-100px)] flex flex-col justify-center items-center gap-20 mx-2'>
       <div className='mx-auto py-[40px] text-center max-md:mt-20'>
         <h1 className='text-3xl font-bold mb-4'>
-          Looking for an event or want to post one?
+          {t('home_page.main_heading')}
         </h1>
         <div className='flex max-[360px]:flex-col max-[360px]:mt-5 gap-2 md:gap-5 items-center justify-center'>
           <NavLink to={"map"}>
-            <button className='btn-grad text-white rounded-[10px] w-[170px] text-lg py-2 font-semibold hover:scale-115 cursor-pointer'>
-              Find an event
+            <button className='btn-grad text-white rounded-[10px] px-5  text-lg py-2 font-semibold hover:scale-115 cursor-pointer'>
+              {t('home_page.find_event_button')}
             </button>
           </NavLink>
-          <button className='rounded-[10px] bg-white border-1 border-black w-[170px] text-lg py-2 font-semibold hover:scale-115 duration-300 cursor-pointer'>
-            Post an event
-          </button>
+          <NavLink to={"post-event"}>
+            <button className='rounded-[10px] bg-white border-1 border-black px-5 text-lg py-2 font-semibold hover:scale-115 duration-300 cursor-pointer'>
+              {t('home_page.post_event_button')}
+            </button>
+          </NavLink>
         </div>
       </div>
 
@@ -64,7 +65,7 @@ const HomePage = () => {
           {/* Upcoming Event Card */}
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 md:max-w-[350px] w-full">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
-              Upcoming Event
+              {t('home_page.upcoming_event_title')}
             </div>
             <Swiper
               spaceBetween={10}
@@ -94,7 +95,7 @@ const HomePage = () => {
           {/* Popular Topic Card */}
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 md:max-w-[350px] w-full">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
-              Popular Topic
+              {t('home_page.popular_topic_title')}
             </div>
             <Swiper
               spaceBetween={10}
@@ -123,7 +124,7 @@ const HomePage = () => {
           {/* Deadline Alert Card */}
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 md:max-w-[350px] w-full">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
-              Deadline Alert
+              {t('home_page.deadline_alert_title')}
             </div>
             <Swiper
               spaceBetween={10}

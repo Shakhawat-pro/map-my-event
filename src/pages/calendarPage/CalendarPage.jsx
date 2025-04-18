@@ -7,8 +7,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { FaEye, FaTrashAlt } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 const EventCalendar = () => {
+  const { t } = useTranslation();
   const axiosPublic = useAxiosPublic();
   const { user } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("calendar");
@@ -24,7 +27,7 @@ const EventCalendar = () => {
   });
 
   // Fetch events using React Query
-  const { data: events = [], isLoading, } = useQuery({
+  const { data: events = [], isLoading, refetch } = useQuery({
     queryKey: ['favoriteEvents', user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
@@ -51,7 +54,6 @@ const EventCalendar = () => {
     enabled: !!user?.email // Only fetch when user is available
   });
 
-
   const getEventColor = (status) => {
     switch (status) {
       case "New": return "#10B981";
@@ -77,10 +79,8 @@ const EventCalendar = () => {
   const closeModal = () => setModal({ ...modal, visible: false });
 
   const viewEvent = (id) => {
-    // console.log(`Viewing event ${id}`);
-    navigate(`/event/${id}`)
-    // TODO: Implement view functionality
-};
+    navigate(`/event/${id}`);
+  };
 
   return (
     <div className="mt-10">
@@ -88,20 +88,20 @@ const EventCalendar = () => {
         {/* Custom Tabs */}
         <div className="flex justify-center border-b max-w-xl mx-auto border-gray-200">
           <button
-            className={`py-3 px-6 font-semibold text-lg focus:outline-none ${activeTab === "calendar"
+            className={`py-3 px-6 font-semibold text-lg focus:outline-none cursor-pointer ${activeTab === "calendar"
               ? "text-purple-700 border-b-2 border-purple-700"
               : "text-gray-500 hover:text-purple-600"}`}
             onClick={() => setActiveTab("calendar")}
           >
-            📅 Calendar
+            📅 {t('calendar.calendar_tab')}
           </button>
           <button
-            className={`py-3 px-6 font-semibold text-lg focus:outline-none ${activeTab === "favorites"
+            className={`py-3 px-6 font-semibold text-lg focus:outline-none cursor-pointer ${activeTab === "favorites"
               ? "text-purple-700 border-b-2 border-purple-700"
               : "text-gray-500 hover:text-purple-600"}`}
             onClick={() => setActiveTab("favorites")}
           >
-            ❤️ Favorites ({events.length})
+            ❤️ {t('calendar.favorites_tab')} ({events.length})
           </button>
         </div>
 
@@ -110,9 +110,9 @@ const EventCalendar = () => {
           {/* Calendar Tab */}
           {activeTab === "calendar" && (
             <div className="calendar-container">
-              <h2 className="calendar-title text-2xl">Event Calendar</h2>
+              <h2 className="calendar-title text-2xl">{t('calendar.calendar_title')}</h2>
               {isLoading ? (
-                <div className="flex justify-center items-center h-64">Loading events...</div>
+                <div className="flex justify-center items-center h-64">{t('calendar.loading')}</div>
               ) : (
                 <FullCalendar
                   plugins={[dayGridPlugin]}
@@ -121,6 +121,7 @@ const EventCalendar = () => {
                   eventClick={handleEventClick}
                   displayEventTime={false}
                   height="auto"
+                
                 />
               )}
 
@@ -141,18 +142,18 @@ const EventCalendar = () => {
                           ? "bg-amber-100 text-amber-800"
                           : "bg-green-100 text-green-800"
                         }`}>
-                        {modal.statusBadge}
+                        {t(`calendar.status.${modal.statusBadge.toLowerCase().replace(' ', '_')}`)}
                       </span>
                     </div>
-                    <p className="mb-2">Start: {modal.start.toLocaleDateString()}</p>
-                    {modal.end && <p className="mb-2">End: {modal.end.toLocaleDateString()}</p>}
-                    <p className="mb-2">Location: {modal.location}</p>
+                    <p className="mb-2">{t('calendar.start_date')}: {modal.start.toLocaleDateString()}</p>
+                    {modal.end && <p className="mb-2">{t('calendar.end_date')}: {modal.end.toLocaleDateString()}</p>}
+                    <p className="mb-2">{t('calendar.location')}: {modal.location}</p>
                     <p className="mb-4 text-sm text-gray-600">{modal.description}</p>
                     <button
                       onClick={closeModal}
                       className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
                     >
-                      Close
+                      {t('calendar.close_button')}
                     </button>
                   </div>
                 </div>
@@ -164,19 +165,19 @@ const EventCalendar = () => {
           {activeTab === "favorites" && (
             <div>
               {isLoading ? (
-                <p>Loading...</p>
+                <p>{t('calendar.loading')}</p>
               ) : (
                 <div className="overflow-x-auto rounded-lg max-w-7xl mx-auto shadow-xl">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gradient-to-r from-purple-500 to-purple-700">
                       <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">#</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Title</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Location</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Deadline</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status Badge</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">{t('calendar.table.title')}</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">{t('calendar.table.location')}</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">{t('calendar.table.date')}</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">{t('calendar.table.deadline')}</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">{t('calendar.table.status')}</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">{t('calendar.table.actions')}</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -187,8 +188,8 @@ const EventCalendar = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.extendedProps?.location}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm ">{new Date(event.start).toLocaleDateString()}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                            <div><span className="font-semibold">Sub-theme:</span> {event.subThemeDeadline ? new Date(event.subThemeDeadline).toLocaleDateString() : "N/A"}</div>
-                            <div><span className="font-semibold">Article:</span> {event.submissionDeadline ? new Date(event.submissionDeadline).toLocaleDateString() : "N/A"}</div>
+                            <div><span className="font-semibold">{t('calendar.sub_theme')}:</span> {event.subThemeDeadline ? new Date(event.subThemeDeadline).toLocaleDateString() : "N/A"}</div>
+                            <div><span className="font-semibold">{t('calendar.article')}:</span> {event.submissionDeadline ? new Date(event.submissionDeadline).toLocaleDateString() : "N/A"}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <span className={`px-3 py-1.5 rounded-md text-sm font-semibold ${event.extendedProps?.statusBadge === "New" ? "bg-blue-100 text-blue-800" :
@@ -196,20 +197,50 @@ const EventCalendar = () => {
                                 event.extendedProps?.statusBadge === "Closing Soon" ? "bg-orange-100 text-orange-800" :
                                   event.extendedProps?.statusBadge === "Ended" ? "bg-red-100 text-red-800" : ""
                               }`}>
-                              {event.extendedProps?.statusBadge}
+                              {t(`calendar.status.${event.extendedProps?.statusBadge.toLowerCase().replace(' ', '_')}`)}
                             </span>
                           </td>
                           <td className="flex items-center gap-2 h-full px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <button
                               onClick={() => viewEvent(event._id)}
                               className="p-2 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors hover:cursor-pointer"
-                              title="View"
+                              title={t('calendar.view_tooltip')}
                             >
                               <FaEye />
                             </button>
                             <button
                               className="p-2 bg-red-100 text-red-800 rounded-md hover:bg-red-200 transition-colors hover:cursor-pointer"
-                              title="Delete"
+                              title={t('calendar.delete_tooltip')}
+                              onClick={async () => {
+                                const result = await Swal.fire({
+                                  title: t('calendar.remove_confirm.title'),
+                                  text: t('calendar.remove_confirm.text'),
+                                  icon: 'warning',
+                                  showCancelButton: true,
+                                  confirmButtonColor: '#3085d6',
+                                  cancelButtonColor: '#d33',
+                                  confirmButtonText: t('calendar.remove_confirm.confirm_button')
+                                });
+                                if (result.isConfirmed) {
+                                  axiosPublic.delete(`/users/${user.email}/favorites`, { data: { eventId: event._id } })
+                                    .then(() => {
+                                      refetch();
+                                      Swal.fire(
+                                        t('calendar.remove_success.title'),
+                                        t('calendar.remove_success.text'),
+                                        'success'
+                                      );
+                                    })
+                                    .catch((error) => {
+                                      console.error("Error removing event from favorites:", error);
+                                      Swal.fire(
+                                        t('calendar.remove_error.title'),
+                                        t('calendar.remove_error.text'),
+                                        'error'
+                                      );
+                                    });
+                                }
+                              }}
                             >
                               <FaTrashAlt />
                             </button>

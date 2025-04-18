@@ -1,47 +1,42 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Calendar, MapPin, Users, Globe, Tag, Clock, BookOpen, GraduationCap } from 'lucide-react';
-import LocationMap from '../../components/LocationMap';
 import Select from "react-select";
-import axios from 'axios';
 import Swal from 'sweetalert2';
+import LocationMap from './LocationMap';
 
 const tagOptions = [
   "Networking", "Keynote", "Innovation", "Tech", "Business",
   "Health", "Education", "AI", "Research", "Leadership"
 ].map(tag => ({ value: tag, label: tag }));
 
-const PostEvent = () => {
-  const navigate = useNavigate();
+const UpdateEvent = ({ event, onCancel, onSubmit }) => {
   const [eventData, setEventData] = useState({
-    title: '',
-    description: '',
-    detailDescription: '',
-    eventType: 'Conference',
-    scientificField: '',
-    theme: '',
-    targetAudience: [],
-    format: '',
-    location: '',
-    city: '',
-    coordinates: { latitude: null, longitude: null },
-    startDate: null,
-    endDate: null,
-    submissionDeadline: null,
-    subThemeDeadline: null,
-    registrationDeadline: null,
-    link: '',
-    language: 'English',
-    organizer: '',
-    tags: [],
-    submittedBy: 'shr2692004@gmail.com'
+    title: event?.title || '',
+    description: event?.description || '',
+    detailDescription: event?.detailDescription || '',
+    eventType: event?.eventType || 'Conference',
+    startDate: event?.startDate ? new Date(event.startDate) : null,
+    endDate: event?.endDate ? new Date(event.endDate) : null,
+    submissionDeadline: event?.submissionDeadline ? new Date(event.submissionDeadline) : null,
+    subThemeDeadline: event?.subThemeDeadline ? new Date(event.subThemeDeadline) : null,
+    registrationDeadline: event?.registrationDeadline ? new Date(event.registrationDeadline) : null,
+    format: event?.format || 'Face-to-face',
+    location: event?.location || '',
+    city: event?.city || '',
+    coordinates: event?.coordinates || { latitude: null, longitude: null },
+    language: event?.language || 'English',
+    link: event?.link || '',
+    scientificField: event?.scientificField || '',
+    theme: event?.theme || '',
+    targetAudience: event?.targetAudience || [],
+    organizer: event?.organizer || '',
+    tags: event?.tags?.map(tag => ({ value: tag, label: tag })) || []
   });
-
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const audienceOptions = useMemo(() => [
     'Master\'s students',
@@ -156,45 +151,26 @@ const PostEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitError('');
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
-    try {
-      const payload = {
-        ...eventData,
-        tags: Array.isArray(eventData.tags)
-          ? eventData.tags.map(tag => tag?.value || tag)
-          : [],
-        startDate: eventData.startDate?.toISOString(),
-        endDate: eventData.endDate?.toISOString(),
-        submissionDeadline: eventData.submissionDeadline?.toISOString(),
-        registrationDeadline: eventData.registrationDeadline?.toISOString(),
-        coordinates: eventData.format !== 'Online' ? eventData.coordinates : null
-      };
-      // console.log("--------------",payload);
+    setSubmitError('');
 
-      await axios.post('http://localhost:5000/api/events/', payload);
-      await Swal.fire({
-        title: 'Success!',
-        text: 'Event has been created successfully',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-      navigate('/');
+    try {
+      const dataToSubmit = {
+        ...eventData,
+        startDate: eventData.startDate.toISOString(),
+        endDate: eventData.endDate.toISOString(),
+        submissionDeadline: eventData.submissionDeadline?.toISOString(),
+        subThemeDeadline: eventData.subThemeDeadline?.toISOString(),
+        registrationDeadline: eventData.registrationDeadline?.toISOString(),
+        tags: eventData.tags.map(tag => tag.value),
+        _id: event?._id
+      };
+
+      onSubmit(dataToSubmit);
     } catch (error) {
-      console.error('Error submitting event:', error);
-      const errorMsg = error.response?.data?.message || error.message || 'Failed to submit event. Please try again.';
-      setSubmitError(errorMsg);
-      await Swal.fire({
-        title: 'Error!',
-        text: errorMsg,
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      setSubmitError(error.message || 'Failed to update event');
     } finally {
       setIsSubmitting(false);
     }
@@ -211,9 +187,9 @@ const PostEvent = () => {
         </div>
       )}
 
-      <div className="bg-base-100 rounded-lg shadow-lg overflow-hidden">
+      <div className="bg-base-100 rounded-lg shadow-lg ">
         <div className="bg-gradient-to-r from-primary to-secondary p-6">
-          <h1 className="text-3xl font-bold text-white">Post a New Event</h1>
+          <h1 className="text-3xl font-bold text-white">Update Event</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
@@ -594,7 +570,7 @@ const PostEvent = () => {
           <div className="flex justify-end gap-4">
             <button
               type="button"
-              onClick={() => navigate('/')}
+              onClick={onCancel}
               className="btn btn-ghost"
             >
               Cancel
@@ -607,9 +583,9 @@ const PostEvent = () => {
               {isSubmitting ? (
                 <>
                   <span className="loading loading-spinner"></span>
-                  Submitting...
+                  Updating...
                 </>
-              ) : 'Submit Event'}
+              ) : 'Update Event'}
             </button>
           </div>
         </form>
@@ -618,4 +594,4 @@ const PostEvent = () => {
   );
 };
 
-export default PostEvent;
+export default UpdateEvent;

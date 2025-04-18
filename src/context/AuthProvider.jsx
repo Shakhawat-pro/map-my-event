@@ -3,15 +3,12 @@ import supabase from '../utils/supabase';
 import { AuthContext } from './AuthContext';
 import useAxiosPublic from '../hooks/useAxiosPublic';
 
-// Initialize Supabase client
-
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    console.log(user);
-
+    console.log('supabase user:', user);
+    
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
-
 
     // Sign in with Google
     const signInWithGoogle = async () => {
@@ -63,18 +60,18 @@ const AuthProvider = ({ children }) => {
                 try {
                     const res = await axiosPublic.get(`/users/${userData.email}`);
                     if (!res.data) {
-                        // User doesn't exist in MongoDB
+                        // User doesn't exist in MongoDB, create a new user in MongoDB
                         const newUser = {
                             email: userData.email,
                             name: userData.full_name,
                             profilePicture: userData.avatar_url,
                         };
-                        // console.log(newUser);
-
                         await axiosPublic.post('/users/create-user', newUser);
                         console.log('User saved to MongoDB');
                     } else {
                         console.log('User already exists in MongoDB');
+                        // console.log('User data from MongoDB:', res.data.data);
+                        setUser(res.data.data);
                     }
                 } catch (err) {
                     console.error('Error checking/saving user:', err);
@@ -103,6 +100,5 @@ const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
-
 
 export default AuthProvider;

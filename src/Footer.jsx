@@ -1,8 +1,11 @@
 import React from 'react';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -10,14 +13,14 @@ const Footer = () => {
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center">
-              <img 
-                src="/logo.png" 
-                alt="ConfMap Logo" 
+              <img
+                src="/logo.png"
+                alt="ConfMap Logo"
                 className="h-8 w-auto"
               />
             </div>
             <p className="text-gray-600">
-              Discover and share scientific events worldwide.
+              {t('footer.tagline')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-500 hover:text-primary">
@@ -37,7 +40,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('footer.quick_links')}</h3>
             <ul className="space-y-2">
               <li>
                 <NavLink to="/" className="text-gray-600 hover:text-primary">
@@ -46,7 +49,7 @@ const Footer = () => {
               </li>
               <li>
                 <NavLink to="/map" className="text-gray-600 hover:text-primary">
-                  Event Map
+                  {t('footer.event_map')}
                 </NavLink>
               </li>
               <li>
@@ -56,7 +59,7 @@ const Footer = () => {
               </li>
               <li>
                 <NavLink to="/post-event" className="text-gray-600 hover:text-primary">
-                  Post Event
+                  {t('footer.post_event')}
                 </NavLink>
               </li>
             </ul>
@@ -64,26 +67,26 @@ const Footer = () => {
 
           {/* Legal Links */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Legal</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('footer.legal')}</h3>
             <ul className="space-y-2">
               <li>
-                <NavLink to="/legal" className="text-gray-600 hover:text-primary">
-                  Terms of Use
+                <NavLink to="/mentions-legales" className="text-gray-600 hover:text-primary">
+                  {t('footer.terms')}
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/privacy" className="text-gray-600 hover:text-primary">
-                  Privacy Policy
+                  {t('footer.privacy')}
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/cookie" className="text-gray-600 hover:text-primary">
-                  Cookie Policy
+                  {t('footer.cookie')}
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/contact" className="text-gray-600 hover:text-primary">
-                  Contact Us
+                  {t('footer.contact')}
                 </NavLink>
               </li>
             </ul>
@@ -91,16 +94,16 @@ const Footer = () => {
 
           {/* About Section */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">About</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('footer.about')}</h3>
             <p className="text-gray-600">
-              ConfMap helps researchers and enthusiasts find and share scientific events across the globe using interactive maps and smart filters.
+              {t('footer.description')}
             </p>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="mt-12 pt-6 border-t border-gray-200 text-center text-gray-500">
-          <p>© {new Date().getFullYear()} ConfMap. All rights reserved.</p>
+          <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
         </div>
       </div>
     </footer>
