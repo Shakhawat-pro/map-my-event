@@ -5,7 +5,7 @@ import useAxiosPublic from '../hooks/useAxiosPublic';
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    console.log('supabase user:', user);
+    // console.log('supabase user:', user);
     
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();

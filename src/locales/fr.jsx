@@ -10,7 +10,11 @@ export default {
     profile: "Profil",
     settings: "Paramètres",
     logout: "Déconnexion",
-    dashboard: "Tableau de bord"
+    dashboard: "Tableau de bord",
+    edit: "Modifier",
+    delete: "Supprimer",
+    error: "Erreur",
+    locale: "fr-FR"
   },
   home_page: {
     main_heading: "Vous cherchez un événement ou souhaitez en publier un ?",
@@ -184,7 +188,40 @@ export default {
 
 
 
-
+  user_events: {
+    title: "Événements Soumis",
+    loading: "Chargement des événements...",
+    no_events: "Aucun événement trouvé",
+    last_updated: "Dernière mise à jour",
+    dates: "Dates",
+    location: "Lieu",
+    audience: "Public",
+    type: "Type",
+    deadlines: "Échéances",
+    sub_theme: "Sous-thème",
+    article: "Article",
+    registration: "Inscription",
+    status: {
+      pending: "en attente",
+      approved: "approuvé",
+      rejected: "rejeté"
+    },
+    update_success: {
+      title: "Succès",
+      message: "Événement mis à jour avec succès"
+    },
+    update_error: "Échec de la mise à jour de l'événement",
+    delete_success: {
+      title: "Succès",
+      message: "Événement supprimé avec succès"
+    },
+    delete_error: "Échec de la suppression de l'événement",
+    delete_confirm: {
+      title: "Êtes-vous sûr ?",
+      text: "Vous ne pourrez pas annuler cette action !",
+      confirm_button: "Oui, supprimez-le !"
+    }
+  },
 
 
 

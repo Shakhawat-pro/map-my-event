@@ -10,7 +10,11 @@ export default {
     profile: "Profile",
     settings: "Settings",
     logout: "Logout",
-    dashboard: "Dashboard"
+    dashboard: "Dashboard",
+    edit: "Edit",
+    delete: "Delete",
+    error: "Error",
+    locale: "en-US"
   },
 
 
@@ -178,6 +182,41 @@ export default {
     not_provided: "Not provided",
     favorites: "Favorite Events",
     saved: "saved"
+  },
+
+  user_events: {
+    title: "Submitted Events",
+    loading: "Loading events...",
+    no_events: "No events found",
+    last_updated: "Last updated",
+    dates: "Dates",
+    location: "Location",
+    audience: "Audience",
+    type: "Type",
+    deadlines: "Deadlines",
+    sub_theme: "Sub-theme",
+    article: "Article",
+    registration: "Registration",
+    status: {
+      pending: "pending",
+      approved: "approved",
+      rejected: "rejected"
+    },
+    update_success: {
+      title: "Success",
+      message: "Event updated successfully"
+    },
+    update_error: "Failed to update event",
+    delete_success: {
+      title: "Success",
+      message: "Event deleted successfully"
+    },
+    delete_error: "Failed to delete event",
+    delete_confirm: {
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      confirm_button: "Yes, delete it!"
+    }
   },
 
 

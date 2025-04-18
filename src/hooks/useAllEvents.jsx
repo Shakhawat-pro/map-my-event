@@ -8,7 +8,7 @@ const useAllEvents = (currentPage = 1, itemsPerPage = 10,) => {
         queryKey: ['events', currentPage, ],
         queryFn: async () => {
             const res = await axiosPublic.get(`events/adminEvents?page=${currentPage}&limit=${itemsPerPage}`);
-            return res.data;
+            return res.data.data;
         },
     });
 

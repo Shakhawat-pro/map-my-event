@@ -5,8 +5,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Calendar, MapPin, Users, Globe, Tag, Clock } from 'lucide-react';
 import Swal from 'sweetalert2';
 import UpdateEvent from './UpdateEvent';
+import { useTranslation } from 'react-i18next';
 
 const UserEvents = () => {
+  const { t } = useTranslation();
   const { user: currentUser } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const queryClient = useQueryClient();
@@ -27,10 +29,10 @@ const UserEvents = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['userEvents', currentUser?.email]);
       setEditingEvent(null);
-      Swal.fire('Success', 'Event updated successfully', 'success');
+      Swal.fire(t('user_events.update_success.title'), t('user_events.update_success.message'), 'success');
     },
     onError: (error) => {
-      Swal.fire('Error', error.response?.data?.message || 'Failed to update event', 'error');
+      Swal.fire(t('common.error'), error.response?.data?.message || t('user_events.update_error'), 'error');
     }
   });
 
@@ -38,10 +40,10 @@ const UserEvents = () => {
     mutationFn: (eventId) => axiosPublic.delete(`/events/${eventId}`),
     onSuccess: () => {
       queryClient.invalidateQueries(['userEvents', currentUser?.email]);
-      Swal.fire('Success', 'Event deleted successfully', 'success');
+      Swal.fire(t('user_events.delete_success.title'), t('user_events.delete_success.message'), 'success');
     },
     onError: (error) => {
-      Swal.fire('Error', error.response?.data?.message || 'Failed to delete event', 'error');
+      Swal.fire(t('common.error'), error.response?.data?.message || t('user_events.delete_error'), 'error');
     }
   });
 
@@ -55,13 +57,13 @@ const UserEvents = () => {
 
   const handleDelete = (eventId) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: t('user_events.delete_confirm.title'),
+      text: t('user_events.delete_confirm.text'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: t('user_events.delete_confirm.confirm_button')
     }).then((result) => {
       if (result.isConfirmed) {
         deleteMutation.mutate(eventId);
@@ -70,14 +72,14 @@ const UserEvents = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(t('common.locale'), {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
   };
 
-  if (isLoading) return <div className="text-center py-8">Loading events...</div>;
+  if (isLoading) return <div className="text-center py-8">{t('user_events.loading')}</div>;
 
   if (editingEvent) {
     return (
@@ -92,11 +94,11 @@ const UserEvents = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold border-b pb-4">
-        Submitted Events ({events.length})
+        {t('user_events.title')} ({events.length})
       </h2>
 
       {events.length === 0 ? (
-        <div className="text-center py-8">No events found</div>
+        <div className="text-center py-8">{t('user_events.no_events')}</div>
       ) : (
         <div className="space-y-6">
           {events.map(event => (
@@ -107,10 +109,10 @@ const UserEvents = () => {
                     <h3 className="text-xl font-bold">{event.title}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <span className={`badge capitalize ${event.status === 'pending' ? 'badge-primary' : event.status === 'approved' ? 'badge-success' : 'badge-error'}`}>
-                        {event.status}
+                        {t(`user_events.status.${event.status}`)}
                       </span>
                       <span className="text-sm text-gray-500">
-                        Last updated: {formatDate(event.updatedAt)}
+                        {t('user_events.last_updated')}: {formatDate(event.updatedAt)}
                       </span>
                     </div>
                   </div>
@@ -119,13 +121,13 @@ const UserEvents = () => {
                       onClick={() => handleEdit(event)}
                       className="btn btn-sm btn-outline"
                     >
-                      Edit
+                      {t('common.edit')}
                     </button>
                     <button
                       onClick={() => handleDelete(event._id)}
                       className="btn btn-sm btn-error text-white"
                     >
-                      Delete
+                      {t('common.delete')}
                     </button>
                   </div>
                 </div>
@@ -137,19 +139,19 @@ const UserEvents = () => {
                     <div className="flex items-center gap-2">
                       <Calendar className="text-gray-500" size={18} />
                       <p>
-                        <span className="font-medium">Dates:</span> {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                        <span className="font-medium">{t('user_events.dates')}:</span> {formatDate(event.startDate)} - {formatDate(event.endDate)}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <MapPin className="text-gray-500" size={18} />
                       <p>
-                        <span className="font-medium">Location:</span> {event.location} ({event.format})
+                        <span className="font-medium">{t('user_events.location')}:</span> {event.location} ({event.format})
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="text-gray-500" size={18} />
                       <p>
-                        <span className="font-medium">Audience:</span> {event.targetAudience?.join(', ')}
+                        <span className="font-medium">{t('user_events.audience')}:</span> {event.targetAudience?.join(', ')}
                       </p>
                     </div>
                   </div>
@@ -158,16 +160,16 @@ const UserEvents = () => {
                     <div className="flex items-center gap-2">
                       <Tag className="text-gray-500" size={18} />
                       <p>
-                        <span className="font-medium">Type:</span> {event.eventType} ({event.scientificField})
+                        <span className="font-medium">{t('user_events.type')}:</span> {event.eventType} ({event.scientificField})
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="text-gray-500" size={18} />
                       <p>
-                        <span className="font-medium">Deadlines:</span>
-                        {event.subThemeDeadline && <span className="block ml-5">Sub-theme: {formatDate(event.subThemeDeadline)}</span>}
-                        {event.submissionDeadline && <span className="block ml-5">Article: {formatDate(event.submissionDeadline)}</span>}
-                        {event.registrationDeadline && <span className="block ml-5">Registration: {formatDate(event.registrationDeadline)}</span>}
+                        <span className="font-medium">{t('user_events.deadlines')}:</span>
+                        {event.subThemeDeadline && <span className="block ml-5">{t('user_events.sub_theme')}: {formatDate(event.subThemeDeadline)}</span>}
+                        {event.submissionDeadline && <span className="block ml-5">{t('user_events.article')}: {formatDate(event.submissionDeadline)}</span>}
+                        {event.registrationDeadline && <span className="block ml-5">{t('user_events.registration')}: {formatDate(event.registrationDeadline)}</span>}
                       </p>
                     </div>
                   </div>
