@@ -4,14 +4,18 @@ import { FiEdit } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 const ManageHomePage = () => {
     const axiosPublic = useAxiosPublic();
+  const { i18n  } = useTranslation();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [newItemTitle, setNewItemTitle] = useState('');
     const [newItemDate, setNewItemDate] = useState('');
     const [modalType, setModalType] = useState('');
+
+    const language = i18n.language;  // To track current language
 
     // Fetch Deadline Data
     const { data: deadlines = [], refetch: refetchDeadlines } = useQuery({
@@ -147,7 +151,7 @@ const ManageHomePage = () => {
                             {upcomingEvents.map((event, index) => (
                                 <tr key={event._id}>
                                     <th>{index + 1}</th>
-                                    <td>{event.title}</td>
+                                    <td>{event.title[language]}</td>
                                     <td>{event.date || '-'}</td>
                                     <td>
                                         <button
@@ -186,8 +190,8 @@ const ManageHomePage = () => {
                             {deadlines.map((deadline, index) => (
                                 <tr key={deadline._id}>
                                     <th>{index + 1}</th>
-                                    <td>{deadline.title}</td>
-                                    <td>{deadline.deadline || '-'}</td>
+                                    <td>{deadline.title[language]}</td>
+                                    <td>{deadline.date || '-'}</td>
                                     <td>
                                         <button
                                             onClick={() => handleDelete(deadline._id, 'deadlines')}
@@ -225,7 +229,7 @@ const ManageHomePage = () => {
                             {popularTopics.map((topic, index) => (
                                 <tr key={topic._id}>
                                     <th>{index + 1}</th>
-                                    <td>{topic.title}</td>
+                                    <td>{topic.title[language]}</td>
                                     <td>-</td>
                                     <td>
                                         <button

@@ -16,7 +16,7 @@ const Login = () => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
-        
+
 
         try {
             await signInUser(email, password);
@@ -44,7 +44,14 @@ const Login = () => {
                     <h1 className="text-white font-bold font-serif text-4xl">Welcome Back!</h1>
                     <Lottie animationData={welcome} loop={true} />
                 </div>
-                <div className="sm:w-1/2 sm:p-10  max-sm:mt-4" onSubmit={handleLogin}>
+                <div className=" sm:w-1/2 sm:p-10 pt-0  max-sm:mt-4 " onSubmit={handleLogin}>
+                    <Link to={'/'} className="flex items-center justify-center mb-5 btn btn-ghost">
+                        <img
+                            src="/logo.png"
+                            alt="ConfMap Logo"
+                            className="h-8 w-auto"
+                        />
+                    </Link>
                     <h1 className="font-bold text-xl">Login Now</h1>
                     <p className="text-sm mt-1">Don`t have an account? <Link to={'/register'}><span className="underline font-bold">Create Now</span></Link></p>
                     <form className="flex flex-col gap-3 mt-5">

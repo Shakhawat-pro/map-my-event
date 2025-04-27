@@ -8,7 +8,7 @@ const useEventCoordinates = () => {
         queryKey: ['eventCoordinates'],
         queryFn: async () => {
             const res = await axiosPublic.get('/events/coordinates');
-            console.log(res.data);
+            // console.log(res.data);
             return res.data;
         },
         staleTime: 5 * 60 * 1000 // 5 minutes

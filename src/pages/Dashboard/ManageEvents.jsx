@@ -1,22 +1,27 @@
 import { useState } from "react";
 import SectionTitle from "../../components/SectionTitle";
 import useAllEvents from "../../hooks/useAllEvents";
-import ReactPaginate from 'react-paginate';
 import { FaTrashAlt, FaCalendarAlt, FaEye, FaCheck, FaTimes } from "react-icons/fa";
 import Swal from "sweetalert2";
-import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useNavigate } from "react-router-dom";
-import { QueryClient } from "@tanstack/react-query";
+import Pagination from "../../components/Pagination";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const ManageEvents = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const { events, totalEvents, totalPages, isLoading, refetch } = useAllEvents(currentPage);
-    const axiosPublic = useAxiosPublic();
+    const [titleFilter, setTitleFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+    const [badgeFilter, setBadgeFilter] = useState('');
+    const { events, totalEvents, totalPages, isLoading, refetch } = useAllEvents(currentPage, 10, { title: titleFilter, status: statusFilter, statusBadge: badgeFilter });
 
-    const handlePageClick = (event) => {
-        setCurrentPage(event.selected + 1);
-    };
+    console.log(totalEvents);
+
+
+
+    const axiosSecure = useAxiosSecure();
+
+
     const handleSuccess = () => {
         refetch(); // Always refetch after successful operation
     };
@@ -32,23 +37,28 @@ const ManageEvents = () => {
             confirmButtonText: "Yes, approve it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // console.log(event._id);
-
-                axiosPublic.patch(`/events/approve/${event._id}`)
+                axiosSecure.patch(`/events/approve/${event._id}`)
                     .then(res => {
-                        if (res.data.modifiedCount > 0) {
+                        if (res.data.success) {
                             handleSuccess();
                             Swal.fire({
                                 title: "Approved!",
                                 text: "The event has been approved.",
                                 icon: "success"
                             });
+                            refetch();
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: res.data.message || "Failed to approve event",
+                                icon: "error"
+                            });
                         }
                     })
-                    .catch(() => {
+                    .catch((error) => {
                         Swal.fire({
                             title: "Error",
-                            text: "Failed to approve event",
+                            text: error.response?.data?.message || "Failed to approve event",
                             icon: "error"
                         });
                     });
@@ -67,21 +77,28 @@ const ManageEvents = () => {
             confirmButtonText: "Yes, reject it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axiosPublic.patch(`/events/reject/${event._id}`)
+                axiosSecure.patch(`/events/reject/${event._id}`)
                     .then(res => {
-                        if (res.data.modifiedCount > 0) {
+                        if (res.data.success) {
                             handleSuccess();
                             Swal.fire({
                                 title: "Rejected!",
                                 text: "The event has been removed.",
                                 icon: "success"
                             });
+                            refetch();
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: res.data.message || "Failed to reject event",
+                                icon: "error"
+                            });
                         }
                     })
-                    .catch(() => {
+                    .catch((error) => {
                         Swal.fire({
                             title: "Error",
-                            text: "Failed to reject event",
+                            text: error.response?.data?.message || "Failed to reject event",
                             icon: "error"
                         });
                     });
@@ -100,21 +117,28 @@ const ManageEvents = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axiosPublic.delete(`/events/${id}`)
+                axiosSecure.delete(`/events/${id}`)
                     .then(res => {
-                        if (res.data.deletedCount > 0) {
+                        if (res.data.success) {
                             handleSuccess();
                             Swal.fire({
                                 title: "Deleted!",
                                 text: "The event has been deleted.",
                                 icon: "success"
                             });
+                            refetch();
+                        } else {
+                            Swal.fire({
+                                title: "Error",
+                                text: res.data.message || "Failed to delete event",
+                                icon: "error"
+                            });
                         }
                     })
-                    .catch(() => {
+                    .catch((error) => {
                         Swal.fire({
                             title: "Error",
-                            text: "Failed to delete event",
+                            text: error.response?.data?.message || "Failed to delete event",
                             icon: "error"
                         });
                     });
@@ -123,21 +147,30 @@ const ManageEvents = () => {
     };
 
     const updateStatusBadge = (eventId, newStatus) => {
-        axiosPublic.patch(`/events/statusBadge/${eventId}`, { statusBadge: newStatus })
+        axiosSecure.patch(`/events/statusBadge/${eventId}`, { statusBadge: newStatus })
             .then(res => {
-                if (res.data?.event) {
+                console.log(res);
+                
+                if (res.status == 200) {
                     handleSuccess();
                     Swal.fire({
                         title: 'Updated!',
                         text: `Status badge changed to "${newStatus}"`,
                         icon: 'success',
                     });
+                    refetch();
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: res.data.message || "Failed to update status badge",
+                        icon: "error"
+                    });
                 }
             })
-            .catch(() => {
+            .catch((error) => {
                 Swal.fire({
                     title: "Error",
-                    text: "Failed to update status badge",
+                    text: error.response?.data?.message || "Failed to update status badge",
                     icon: "error"
                 });
             });
@@ -150,13 +183,49 @@ const ManageEvents = () => {
         // TODO: Implement view functionality
     };
 
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
     return (
-        <div className="max-w-screen-xl w-10/12 mx-auto">
+        <div className="max-w-screen-xl p-3 sm:w-10/12 mx-auto">
             <SectionTitle heading={"All Events"} subHeading={'Manage all events'}></SectionTitle>
             <div className="shadow-2xl p-5 rounded-md mb-10">
+
                 <div className="sm:text-2xl md:text-4xl my-6 font-bold cinzel text-center ">
                     <div className="space-y-2">
                         <h2>Total Events: {totalEvents}</h2>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 mt-5">
+                        <input
+                            type="text"
+                            placeholder="Search by Title"
+                            value={titleFilter}
+                            onChange={(e) => { setTitleFilter(e.target.value); setCurrentPage(1); }}
+                            className="input input-bordered w-full max-w-xs"
+                        />
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+                            className="select select-bordered w-full max-w-xs"
+                        >
+                            <option value="">All Status</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                        <select
+                            value={badgeFilter}
+                            onChange={(e) => { setBadgeFilter(e.target.value); setCurrentPage(1); }}
+                            className="select select-bordered w-full max-w-xs"
+                        >
+                            <option value="">All Status Badge</option>
+                            <option value="New">New</option>
+                            <option value="Upcoming">Upcoming</option>
+                            <option value="Closing Soon">Closing Soon</option>
+                            <option value="Ended">Ended</option>
+                        </select>
+
                     </div>
                 </div>
                 {isLoading ? (
@@ -179,8 +248,8 @@ const ManageEvents = () => {
                                 <tbody>
                                     {events.map((event, index) => (
                                         <tr key={event._id}>
-                                            <th>{index + 1}</th>
-                                            <td className="font-bold">{event.title}</td>
+                                            <th>{(currentPage - 1) * 10 + index + 1}</th>
+                                            <td className="font-bold">{event.title.en}</td>
                                             <td>{event.location}</td>
                                             <td>{new Date(event.startDate).toLocaleDateString()}</td>
                                             <td className=" ">
@@ -253,22 +322,10 @@ const ManageEvents = () => {
                             </table>
                         </div>
                         <div className="flex justify-center mt-4">
-                            <ReactPaginate
-                                previousLabel={'Previous'}
-                                nextLabel={'Next'}
-                                breakLabel={'...'}
-                                pageCount={totalPages}
-                                marginPagesDisplayed={2}
-                                pageRangeDisplayed={5}
-                                onPageChange={handlePageClick}
-                                containerClassName={'pagination'}
-                                activeClassName={'active'}
-                                pageClassName={'page-item'}
-                                pageLinkClassName={'page-link'}
-                                previousClassName={'page-item'}
-                                previousLinkClassName={'page-link'}
-                                nextClassName={'page-item'}
-                                nextLinkClassName={'page-link'}
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={handlePageChange}
                             />
                         </div>
                     </div>

@@ -12,6 +12,7 @@ import supabase from "../../utils/supabase";
 const Register = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [accepted, setAccepted] = useState(false);
     const navigate = useNavigate();
 
     // Handle file input change (for profile image upload)
@@ -23,6 +24,13 @@ const Register = () => {
     // Handle registration form submission
     const handleRegister = async (e) => {
         e.preventDefault();
+        if (!accepted) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "You must accept the terms and conditions to register.",
+            });
+        }
         setLoading(true);
         const fullName = e.target.fullName.value;
         const email = e.target.email.value;
@@ -126,9 +134,13 @@ const Register = () => {
                         <div className="flex items-center gap-4 border-1 rounded-md overflow-clip">
                             <label className="btn bg-black text-white hover:bg-white hover:text-black duration-300 rounded-none border-0 border-r-1 border-black">
                                 Choose Photo
-                                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} required />
+                                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                             </label>
-                            <span className="text-sm">{selectedFile ? selectedFile.name : "No photo selected"}</span>
+                            <span className="text-sm">{selectedFile ? selectedFile.name : "No photo selected (optional)"}</span>
+                        </div>
+                        <div>
+                            <input type="checkbox" className="checkbox checkbox-neutral" checked={accepted} onChange={() => setAccepted(!accepted)} required />
+                            <span className="ml-2 text-sm">I accept the <Link to="/mentions-legales" className="text-blue-600 underline">terms and conditions</Link></span>
                         </div>
                         <div className="form-control mt-4 w-full">
                             <button type="submit" className="btn bg-black text-white w-full rounded-lg">

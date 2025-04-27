@@ -7,6 +7,7 @@ import 'leaflet-geosearch/dist/geosearch.css';
 import ResizeMap from '../utils/ResizeMap';
 import useEventCoordinates from '../hooks/useEventCoordinates';
 import useAxiosPublic from '../hooks/useAxiosPublic';
+import { useTranslation } from 'react-i18next';
 
 // Default marker icon setup
 const DefaultIcon = L.icon({
@@ -71,27 +72,98 @@ const MapUpdater = ({ selectedEvent }) => {
 };
 
 // Modal component
+// Modal component
 const EventModal = ({ isOpen, onClose, data }) => {
+  const { i18n } = useTranslation();
+  const language = i18n.language;  // To track current language
+
   if (!isOpen || !data) return null;
 
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
   return (
-    <div className="fixed inset-0 bg-[#05050562]  z-[9999] flex items-center justify-center px-4">
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto border border-gray-100">
         <button
-          className="absolute top-2 right-2 text-gray-600 hover:text-black"
+          className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 transition-colors"
           onClick={onClose}
         >
-          ✕
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
-        <h3 className="font-bold text-xl mb-2">{data.title}</h3>
-        <p><strong>Location:</strong> {data.location || 'N/A'}, {data.city || 'N/A'}</p>
-        <p>
-          <strong>Dates:</strong>{" "}
-          {data.startDate ? new Date(data.startDate).toLocaleDateString() : 'N/A'} to{" "}
-          {data.endDate ? new Date(data.endDate).toLocaleDateString() : 'N/A'}
-        </p>
-        <p><strong>Format:</strong> {data.format || 'N/A'}</p>
-        <p><strong>Organizer:</strong> {data.organizer || 'N/A'}</p>
+        
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              {data.title[language] || data.title.en}
+            </h2>
+            <p className="text-gray-700 text-sm">
+              {data.description[language] || data.description.en}
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-medium  uppercase tracking-wider mb-2">Event Details</h3>
+                <div className="space-y-2 text-gray-800">
+                  <p><span className="font-semibold">Type:</span> {data.eventType || 'N/A'}</p>
+                  <p><span className="font-semibold">Field:</span> {data.scientificField || 'N/A'}</p>
+                  <p><span className="font-semibold">Theme:</span> {data.theme || 'N/A'}</p>
+                  <p><span className="font-semibold">Audience:</span> {data.targetAudience?.join(', ') || 'N/A'}</p>
+                  <p><span className="font-semibold">Format:</span> {data.format || 'N/A'}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-medium  uppercase tracking-wider mb-2">Location</h3>
+                <div className="space-y-2 text-gray-800 font-semibold">
+                  <p>{data.location || 'N/A'}, {data.city || 'N/A'}</p>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-sm font-medium uppercase tracking-wider mb-2">Dates</h3>
+                <div className="space-y-2 text-gray-800">
+                  <p><span className="font-semibold">Start:</span> {formatDate(data.startDate)}</p>
+                  <p><span className="font-semibold">End:</span> {formatDate(data.endDate)}</p>
+                  <p><span className="font-semibold">Submission:</span> {formatDate(data.submissionDeadline)}</p>
+                  <p><span className="font-semibold">Registration:</span> {formatDate(data.registrationDeadline)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="pt-4 border-t border-gray-100">
+            <h3 className="text-sm font-medium  uppercase tracking-wider mb-2">Additional Info</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+              <p><span className="font-semibold">Language:</span> {data.language || 'N/A'}</p>
+              <p><span className="font-semibold">Organizer:</span> {data.organizer || 'N/A'}</p>
+              <p className='capitalize'><span className="font-semibold">Tags:</span> {data.tags?.join(', ') || 'N/A'}</p>
+              <p><span className="font-semibold">Status:</span> {data.statusBadge || data.status || 'N/A'}</p>
+              {data.link && (
+                <p>
+                  <span className="font-semibold">Link:</span> {' '}
+                  <a href={data.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                    Visit website
+                  </a>
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -155,6 +227,7 @@ const Map = ({ selectedEvent }) => {
       center={defaultCenter}
       zoom={defaultZoom}
       className="min-h-96 h-full w-full"
+      scrollWheelZoom={true}
     >
       <ResizeMap />
       <TileLayer

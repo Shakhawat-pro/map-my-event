@@ -24,7 +24,7 @@ const Dashboard = () => {
                         <p className="text-2xl tracking-[.3rem] font-extrabold font-serif">ConfMap</p>
                     </div>
                         {/* Sidebar content here */}
-                        <li><NavLink className={'flex items-center gap-2'} to="/dashboard"><FaHome />Admin Home</NavLink></li>
+                        <li><NavLink className={'flex items-center gap-2'} to="/dashboard"><FaHome />Home</NavLink></li>
                         <li><NavLink className={'flex items-center gap-2'} to="/dashboard/manageUser"><FiEdit />Manage User</NavLink></li>
                         {/* <li><NavLink className={'flex items-center gap-2'} to="/dashboard/managePublisher">Manage Publisher</NavLink></li> */}
                         <li><NavLink className={'flex items-center gap-2'} to="/dashboard/manageEvents"><RiArticleLine />Manage Events</NavLink></li>
@@ -34,7 +34,7 @@ const Dashboard = () => {
                         <li><NavLink className={'flex items-center gap-2'} to={'/'}><FaHome /> Home</NavLink></li>
                         <li><NavLink className={'flex items-center gap-2'} to={'/post-event'}><FiEdit />Post Event</NavLink></li>
                         <li><NavLink className={'flex items-center gap-2'} to={'/map'}><GiNewspaper />Find Event</NavLink></li>
-                        <li><NavLink className={'flex items-center gap-2'} to={'/calender'}><MdOutlineWorkspacePremium /> Calendar</NavLink></li>
+                        <li><NavLink className={'flex items-center gap-2'} to={'/calendar'}><MdOutlineWorkspacePremium /> Calendar</NavLink></li>
                     </ul>
                 </div>
             </div>

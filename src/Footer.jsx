@@ -44,7 +44,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <NavLink to="/" className="text-gray-600 hover:text-primary">
-                  Home
+                  {t('footer.home')}
                 </NavLink>
               </li>
               <li>
@@ -53,8 +53,8 @@ const Footer = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/calender" className="text-gray-600 hover:text-primary">
-                  Calendar
+                <NavLink to="/calendar" className="text-gray-600 hover:text-primary">
+                {t('footer.calendar')}
                 </NavLink>
               </li>
               <li>

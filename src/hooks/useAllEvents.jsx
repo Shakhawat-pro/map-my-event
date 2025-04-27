@@ -1,25 +1,33 @@
-import { useQuery } from '@tanstack/react-query';
-import useAxiosPublic from './useAxiosPublic';
+import { useQuery } from "@tanstack/react-query";
+// import useAxiosPublic from "./useAxiosPublic";
+import useAxiosSecure from "./useAxiosSecure";
 
-const useAllEvents = (currentPage = 1, itemsPerPage = 10,) => {
-    const axiosPublic = useAxiosPublic();
+const useAllEvents = (currentPage = 1, itemsPerPage = 10, filters = {}) => {
+    // const axiosPublic = useAxiosPublic();
+    const axiosSecure = useAxiosSecure();
 
-    const { data, error, isLoading, refetch } = useQuery({
-        queryKey: ['events', currentPage, ],
+    const { data, isLoading, refetch } = useQuery({
+        queryKey: ['events', currentPage, filters],
         queryFn: async () => {
-            const res = await axiosPublic.get(`events/adminEvents?page=${currentPage}&limit=${itemsPerPage}`);
-            return res.data.data;
+            const params = new URLSearchParams({
+                page: currentPage,
+                itemsPerPage,
+                ...filters
+            });
+            const res = await axiosSecure.get(`/events/adminEvents?${params}`);
+            return res.data;
         },
+        keepPreviousData: true,
     });
 
     return {
         events: data?.data?.events || [],
         totalEvents: data?.size || 0,
         totalPages: data?.data?.totalPages || 0,
-        error,
         isLoading,
-        refetch
+        refetch,
     };
 };
 
 export default useAllEvents;
+

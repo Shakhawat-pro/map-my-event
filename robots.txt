@@ -3,4 +3,4 @@ Allow: /
 Disallow: /private/
 Disallow: /admin/
 
-Sitemap: https://conmap.app/sitemap.xml
+Sitemap: https://confmap.fr/sitemap.xml

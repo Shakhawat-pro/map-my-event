@@ -6,13 +6,23 @@ import { Calendar, MapPin, Users, Globe, Tag, Clock } from 'lucide-react';
 import Swal from 'sweetalert2';
 import UpdateEvent from './UpdateEvent';
 import { useTranslation } from 'react-i18next';
+import useAxiosSecure from '../hooks/useAxiosSecure';
 
 const UserEvents = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user: currentUser } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [editingEvent, setEditingEvent] = useState(null);
+  const currentLanguage = i18n.language;
+
+  // Helper function to get localized text
+  const getLocalizedText = (text) => {
+    if (!text) return '';
+    if (typeof text === 'string') return text;
+    return text[currentLanguage] || text.en || '';
+  };
 
   const { data: { data: events = [] } = {}, isLoading } = useQuery({
     queryKey: ['userEvents', currentUser?.email],
@@ -37,7 +47,7 @@ const UserEvents = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (eventId) => axiosPublic.delete(`/events/${eventId}`),
+    mutationFn: (eventId) => axiosSecure.delete(`/events/deleteEvent/${eventId}?email=${currentUser.email}`),
     onSuccess: () => {
       queryClient.invalidateQueries(['userEvents', currentUser?.email]);
       Swal.fire(t('user_events.delete_success.title'), t('user_events.delete_success.message'), 'success');
@@ -106,7 +116,7 @@ const UserEvents = () => {
               <div className="p-6">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-xl font-bold">{event.title}</h3>
+                    <h3 className="text-xl font-bold">{getLocalizedText(event.title)}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <span className={`badge capitalize ${event.status === 'pending' ? 'badge-primary' : event.status === 'approved' ? 'badge-success' : 'badge-error'}`}>
                         {t(`user_events.status.${event.status}`)}
@@ -117,7 +127,7 @@ const UserEvents = () => {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button
+                   <button
                       onClick={() => handleEdit(event)}
                       className="btn btn-sm btn-outline"
                     >
@@ -132,7 +142,7 @@ const UserEvents = () => {
                   </div>
                 </div>
 
-                <p className="mt-3 text-gray-600">{event.description}</p>
+                <p className="mt-3 text-gray-600">{getLocalizedText(event.description)}</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div className="space-y-2">
@@ -145,7 +155,7 @@ const UserEvents = () => {
                     <div className="flex items-center gap-2">
                       <MapPin className="text-gray-500" size={18} />
                       <p>
-                        <span className="font-medium">{t('user_events.location')}:</span> {event.location} ({event.format})
+                        <span className="font-medium">{t('user_events.location')}:</span> {getLocalizedText(event.location)} ({event.format})
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

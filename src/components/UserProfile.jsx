@@ -1,12 +1,13 @@
-import React, { useState, useContext } from 'react';
+import { useContext, useState,  } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { AuthContext } from '../context/AuthContext';
-import useAxiosPublic from '../hooks/useAxiosPublic';
 import { AdvancedImage } from '@cloudinary/react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { fill } from '@cloudinary/url-gen/actions/resize';
 import supabase from '../utils/supabase';
 import { useTranslation } from 'react-i18next';
+import useAxiosSecure from '../hooks/useAxiosSecure';
+import useAxiosPublic from '../hooks/useAxiosPublic';
+import { AuthContext } from '../context/AuthContext';
 
 const cld = new Cloudinary({
   cloud: {
@@ -16,7 +17,9 @@ const cld = new Cloudinary({
 
 const UserProfile = () => {
   const { t } = useTranslation();
-  const { user: currentUser } = useContext(AuthContext);
+  
+  const { user: currentUser } = useContext(AuthContext)
+  const axiosSecure = useAxiosSecure();
   const axiosPublic = useAxiosPublic();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
@@ -37,7 +40,7 @@ const UserProfile = () => {
     queryKey: ['user', currentUser?.email],
     queryFn: async () => {
       try {
-        const res = await axiosPublic.get(`/users/${currentUser?.email}`);
+        const res = await axiosSecure.get(`/users/private/${currentUser?.email}`);
         return {
           ...defaultUser,
           ...res.data?.data
@@ -52,7 +55,7 @@ const UserProfile = () => {
 
   const updateMutation = useMutation({
     mutationFn: async (updatedData) => {
-      await axiosPublic.patch(`/users/profile/${currentUser?.email}`, updatedData);
+      await axiosSecure.patch(`/users/profile/${currentUser?.email}`, updatedData);
       
       if (updatedData.name || updatedData.profilePicture) {
         await supabase.auth.updateUser({

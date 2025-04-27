@@ -25,6 +25,10 @@ import ManageHomePage from './pages/Dashboard/manageHomePage.jsx';
 import ErrorPage from './pages/errorPage/ErrorPage.jsx';
 import Profile from './pages/Profile/Profile.jsx';
 import LegalPage from './pages/legalPage/LegalPage.jsx';
+import PrivacyPolicy from './pages/legalPage/PrivacyPolicy.jsx';
+import CookiePolicy from './pages/legalPage/CookiePolicy.jsx';
+import PrivateRoute from './routes/PrivateRoute.jsx';
+import AdminRoute from './routes/AdminRoute.jsx';
 
 const queryClient = new QueryClient();
 
@@ -32,7 +36,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App></App>,
-    errorElement: <ErrorPage></ErrorPage>,
+    // errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         path: "/",
@@ -43,7 +47,7 @@ const router = createBrowserRouter([
         element: <MapPage />
       },
       {
-        path: "calender",
+        path: "calendar",
         element: <CalenderPage />
       },
       {
@@ -60,37 +64,45 @@ const router = createBrowserRouter([
       },
       {
         path: "post-event",
-        element: <PostEvent />
+        element: <PrivateRoute><PostEvent /></PrivateRoute>
       },
       {
         path: "profile",
-        element: <Profile />
+        element: <PrivateRoute><Profile /></PrivateRoute>
       },
       {
         path: "mentions-legales",
         element: <LegalPage />
+      },
+      {
+        path: "privacy",
+        element: <PrivacyPolicy />
+      },
+      {
+        path: "cookie",
+        element: <CookiePolicy />
       }
     ]
   },
   {
     path: 'dashboard',
-    element: <Dashboard></Dashboard>,
+    element: <AdminRoute><Dashboard></Dashboard></AdminRoute>,
     children: [
       {
         path: '/dashboard',
-        element: <AdminHome></AdminHome>
+        element: <AdminRoute><AdminHome></AdminHome></AdminRoute>
       },
       {
         path: 'manageUser',
-        element: <ManageUser></ManageUser>
+        element: <AdminRoute><ManageUser></ManageUser></AdminRoute>
       },
       {
         path: 'manageEvents',
-        element: <ManageEvents></ManageEvents>
+        element: <AdminRoute><ManageEvents></ManageEvents></AdminRoute>
       },
       {
         path: 'manageHomePage',
-        element: <ManageHomePage></ManageHomePage>
+        element: <AdminRoute><ManageHomePage></ManageHomePage></AdminRoute>
       }
     ]
   }

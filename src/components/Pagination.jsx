@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const [pageInput, setPageInput] = useState(currentPage);
   const maxVisiblePages = 5;
 
-  // Update input when currentPage changes
-  React.useEffect(() => {
+  useEffect(() => {
     setPageInput(currentPage);
   }, [currentPage]);
 
-  // Calculate range of pages to show
   let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
   let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
@@ -38,12 +36,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-2">
-      <div className="flex justify-center items-center space-x-2">
+    <div className="flex flex-col items-center space-y-3 w-full">
+      {/* Page buttons */}
+      <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 w-full">
         <button
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
-          className="px-3 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300"
+          className="px-2 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300 text-sm cursor-pointer"
           aria-label="First page"
         >
           «
@@ -51,7 +50,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="px-3 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300"
+          className="px-2 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300 text-sm cursor-pointer"
           aria-label="Previous page"
         >
           ‹
@@ -61,11 +60,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           <>
             <button
               onClick={() => onPageChange(1)}
-              className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+              className="px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 text-sm cursor-pointer"
             >
               1
             </button>
-            {startPage > 2 && <span className="px-2">...</span>}
+            {startPage > 2 && <span className="text-sm px-1">...</span>}
           </>
         )}
 
@@ -73,9 +72,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           <button
             key={number}
             onClick={() => onPageChange(number)}
-            className={`px-3 py-1 rounded-md ${
-              currentPage === number 
-                ? 'bg-primary text-white' 
+            className={`px-2 py-1 rounded-md text-sm cursor-pointer ${
+              currentPage === number
+                ? 'bg-primary text-white'
                 : 'bg-gray-200 hover:bg-gray-300'
             }`}
           >
@@ -85,10 +84,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
         {endPage < totalPages && (
           <>
-            {endPage < totalPages - 1 && <span className="px-2">...</span>}
+            {endPage < totalPages - 1 && <span className="text-sm px-1">...</span>}
             <button
               onClick={() => onPageChange(totalPages)}
-              className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+              className="px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 text-sm cursor-pointer"
             >
               {totalPages}
             </button>
@@ -98,7 +97,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-3 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300"
+          className="px-2 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300 text-sm cursor-pointer"
           aria-label="Next page"
         >
           ›
@@ -106,28 +105,28 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
-          className="px-3 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300"
+          className="px-2 py-1 rounded-md disabled:opacity-50 bg-gray-200 hover:bg-gray-300 text-sm cursor-pointer"
           aria-label="Last page"
         >
           »
         </button>
       </div>
 
-      {/* Page number input */}
-      <form onSubmit={handlePageInputSubmit} className="flex items-center space-x-2 mt-5">
-        <span className="text-sm text-gray-600">Go to page:</span>
+      {/* Go to page */}
+      <form onSubmit={handlePageInputSubmit} className="flex flex-wrap justify-center items-center gap-2 text-sm">
+        <span className="text-gray-600">Go to page:</span>
         <input
           type="number"
           min="1"
           max={totalPages}
           value={pageInput}
           onChange={handlePageInputChange}
-          className="w-16 px-2 py-1 border rounded-md text-center"
+          className="w-16 px-2 py-1 border rounded-md text-center text-sm"
           aria-label="Page number"
         />
         <button 
           type="submit"
-          className="px-3 py-1 bg-primary text-white rounded-md hover:bg-primary-dark"
+          className="px-3 py-1 bg-primary text-white rounded-md hover:bg-primary-dark text-sm cursor-pointer"
         >
           Go
         </button>

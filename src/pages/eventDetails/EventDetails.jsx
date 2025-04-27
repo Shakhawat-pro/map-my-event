@@ -32,12 +32,15 @@ L.Icon.Default.mergeOptions({
 });
 
 const EventDetails = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { id } = useParams();
   const { user: currentUser } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
+
+  const language = i18n.language;  // To track current language
+
 
   const { data: event, isLoading, isError } = useQuery({
     queryKey: ['event', id],
@@ -115,19 +118,19 @@ const EventDetails = () => {
         {/* Header with title and status */}
         <div className="bg-gradient-to-r from-primary to-secondary p-6">
           <div className="flex justify-between items-center">
-            <h1 className="min-[400px]:text-3xl font-bold text-white">{event?.title}</h1>
+            <h1 className="min-[400px]:text-3xl font-bold text-white">{event?.title[language] || event?.title?.en}</h1>
             <span className="badge badge-lg badge-accent">
               {t(`event_details.status.${event?.statusBadge.toLowerCase().replace(' ', '_')}`)}
             </span>
           </div>
-          <p className="text-white mt-2 max-[400px]:text-sm">{event?.description}</p>
+          <p className="text-white mt-2 max-[400px]:text-sm">{event?.description[language] || event?.description.en}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
           {/* Main content */}
           <div className="lg:col-span-2">
             <h2 className="text-2xl font-semibold mb-4">{t('event_details.details_title')}</h2>
-            <p className="mb-6">{event?.detailDescription}</p>
+            <p className="mb-6">{event?.detailDescription[language] || event?.detailDescription.en}</p>
 
             {/* Event metadata */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

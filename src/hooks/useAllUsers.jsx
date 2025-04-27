@@ -1,28 +1,36 @@
-import React from 'react';
-import useAxiosPublic from './useAxiosPublic';
+// hooks/useAllUsers.js
+
 import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from './useAxiosSecure';
 
-const useAllUsers = (page = 1, limit = 5) => {
-    const axiosPublic = useAxiosPublic()
-    const fetchUsers = async () => {
-        const res = await axiosPublic.get(`/users?page=${page}&limit=${limit}`);
-        return res.data;
-    };
+const useAllUsers = (page = 1, filters = {}, limit = 5) => {
+  const axiosSecure = useAxiosSecure();
 
-    const { data, isLoading, refetch } = useQuery({
-        queryKey: ['users', page, limit],
-        queryFn: fetchUsers,
-        keepPreviousData: true
-    });
+  const fetchUsers = async () => {
+    const params = new URLSearchParams({
+      page,
+      limit,
+      ...filters,
+    }).toString();
 
-    return {
-        users: data?.data.users|| [],
-        totalUsers: data?.size || 0,
-        totalPages: data?.data?.totalPages || 0,
-        currentPage: data?.data?.currentPage || 1,
-        isLoading,
-        refetch
-    };
+    const res = await axiosSecure.get(`/users?${params}`);
+    return res.data;
+  };
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['users', page, filters, limit],
+    queryFn: fetchUsers,
+    keepPreviousData: true
+  });
+
+  return {
+    users: data?.data?.users || [],
+    totalUsers: data?.size || 0,
+    totalPages: data?.data?.totalPages || 0,
+    currentPage: data?.data?.currentPage || 1,
+    isLoading,
+    refetch,
+  };
 };
 
 export default useAllUsers;

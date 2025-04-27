@@ -1,12 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Calendar, MapPin, Users, Globe, Tag, Clock, BookOpen, GraduationCap } from 'lucide-react';
 import LocationMap from '../../components/LocationMap';
-import Select from "react-select";
-import axios from 'axios';
+import CreatableSelect from 'react-select/creatable';
 import Swal from 'sweetalert2';
+import { useTranslation } from 'react-i18next';
+import { AuthContext } from '../../context/AuthContext';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
 
 const tagOptions = [
   "Networking", "Keynote", "Innovation", "Tech", "Business",
@@ -14,6 +16,10 @@ const tagOptions = [
 ].map(tag => ({ value: tag, label: tag }));
 
 const PostEvent = () => {
+  const { t } = useTranslation();
+    const { user } = useContext(AuthContext);
+    const axiosPublic = useAxiosPublic()
+  
   const navigate = useNavigate();
   const [eventData, setEventData] = useState({
     title: '',
@@ -36,7 +42,7 @@ const PostEvent = () => {
     language: 'English',
     organizer: '',
     tags: [],
-    submittedBy: 'shr2692004@gmail.com'
+    submittedBy: user?.email
   });
 
   const [errors, setErrors] = useState({});
@@ -93,23 +99,23 @@ const PostEvent = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!eventData.title.trim()) newErrors.title = 'Title is required';
-    if (!eventData.description.trim()) newErrors.description = 'Description is required';
-    if (!eventData.startDate) newErrors.startDate = 'Start date is required';
-    if (!eventData.endDate) newErrors.endDate = 'End date is required';
+    if (!eventData.title.trim()) newErrors.title = t('postEvent.validation.required');
+    if (!eventData.description.trim()) newErrors.description = t('postEvent.validation.required');
+    if (!eventData.startDate) newErrors.startDate = t('postEvent.validation.required');
+    if (!eventData.endDate) newErrors.endDate = t('postEvent.validation.required');
     if (eventData.startDate && eventData.endDate && eventData.startDate > eventData.endDate) {
-      newErrors.endDate = 'End date must be after start date';
+      newErrors.endDate = t('postEvent.validation.endDateAfterStart');
     }
-    if (!eventData.format) newErrors.format = 'Format is required';
-    if (!eventData.scientificField) newErrors.scientificField = 'Scientific field is required';
-    if (!eventData.theme.trim()) newErrors.theme = 'Theme is required';
-    if (!eventData.organizer.trim()) newErrors.organizer = 'Organizer is required';
+    if (!eventData.format) newErrors.format = t('postEvent.validation.required');
+    if (!eventData.scientificField) newErrors.scientificField = t('postEvent.validation.required');
+    if (!eventData.theme.trim()) newErrors.theme = t('postEvent.validation.required');
+    if (!eventData.organizer.trim()) newErrors.organizer = t('postEvent.validation.required');
 
     if (eventData.format !== 'Online') {
-      if (!eventData.location.trim()) newErrors.location = 'Location is required';
-      if (!eventData.city.trim()) newErrors.city = 'City is required';
+      if (!eventData.location.trim()) newErrors.location = t('postEvent.validation.required');
+      if (!eventData.city.trim()) newErrors.city = t('postEvent.validation.required');
       if (!eventData.coordinates.latitude || !eventData.coordinates.longitude) {
-        newErrors.coordinates = 'Please select a location on the map';
+        newErrors.coordinates = t('postEvent.validation.selectLocation');
       }
     }
 
@@ -175,22 +181,21 @@ const PostEvent = () => {
         registrationDeadline: eventData.registrationDeadline?.toISOString(),
         coordinates: eventData.format !== 'Online' ? eventData.coordinates : null
       };
-      // console.log("--------------",payload);
 
-      await axios.post('http://localhost:5000/api/events/', payload);
+      await axiosPublic.post('/events/', payload);
       await Swal.fire({
-        title: 'Success!',
-        text: 'Event has been created successfully',
+        title: t('postEvent.success.title'),
+        text: t('postEvent.success.message'),
         icon: 'success',
         confirmButtonText: 'OK'
       });
       navigate('/');
     } catch (error) {
       console.error('Error submitting event:', error);
-      const errorMsg = error.response?.data?.message || error.message || 'Failed to submit event. Please try again.';
+      const errorMsg = error.response?.data?.message || error.message || t('postEvent.error.message');
       setSubmitError(errorMsg);
       await Swal.fire({
-        title: 'Error!',
+        title: t('postEvent.error.title'),
         text: errorMsg,
         icon: 'error',
         confirmButtonText: 'OK'
@@ -213,7 +218,7 @@ const PostEvent = () => {
 
       <div className="bg-base-100 rounded-lg shadow-lg overflow-hidden">
         <div className="bg-gradient-to-r from-primary to-secondary p-6">
-          <h1 className="text-3xl font-bold text-white">Post a New Event</h1>
+          <h1 className="text-3xl font-bold text-white">{t('postEvent.title')}</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
@@ -222,13 +227,13 @@ const PostEvent = () => {
             <div className="card-body">
               <h2 className="card-title flex items-center gap-2">
                 <BookOpen className="text-primary" />
-                Basic Information
+                {t('postEvent.basicInfo')}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Event Title:</span>
+                    <span className="label-text">{t('postEvent.eventTitle')}:</span>
                   </label>
                   <input
                     type="text"
@@ -238,12 +243,12 @@ const PostEvent = () => {
                     className={`input input-bordered ${errors.title ? 'input-error' : ''}`}
                     required
                   />
-                  {errors.title && <span className="text-error text-sm">{errors.title}</span>}
+                  {errors.title && <span className="text-error text-sm">{t('postEvent.eventTitle')} {errors.title}</span>}
                 </div>
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Event Type:</span>
+                    <span className="label-text">{t('postEvent.eventType')}:</span>
                   </label>
                   <select
                     name="eventType"
@@ -261,7 +266,7 @@ const PostEvent = () => {
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Short Description:</span>
+                    <span className="label-text">{t('postEvent.shortDescription')}:</span>
                   </label>
                   <textarea
                     name="description"
@@ -270,12 +275,12 @@ const PostEvent = () => {
                     className={`textarea textarea-bordered ${errors.description ? 'textarea-error' : ''}`}
                     required
                   />
-                  {errors.description && <span className="text-error text-sm">{errors.description}</span>}
+                  {errors.description && <span className="text-error text-sm">{t('postEvent.shortDescription')} {errors.description}</span>}
                 </div>
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Detailed Description:</span>
+                    <span className="label-text">{t('postEvent.detailedDescription')}:</span>
                   </label>
                   <textarea
                     name="detailDescription"
@@ -293,13 +298,13 @@ const PostEvent = () => {
             <div className="card-body">
               <h2 className="card-title flex items-center gap-2">
                 <Calendar className="text-primary" />
-                Dates
+                {t('postEvent.dates')}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Start Date:</span>
+                    <span className="label-text">{t('postEvent.startDate')}:</span>
                   </label>
                   <DatePicker
                     selected={eventData.startDate}
@@ -308,12 +313,12 @@ const PostEvent = () => {
                     dateFormat="MMMM d, yyyy"
                     required
                   />
-                  {errors.startDate && <span className="text-error text-sm">{errors.startDate}</span>}
+                  {errors.startDate && <span className="text-error text-sm">{t('postEvent.startDate')} {errors.startDate}</span>}
                 </div>
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">End Date:</span>
+                    <span className="label-text">{t('postEvent.endDate')}:</span>
                   </label>
                   <DatePicker
                     selected={eventData.endDate}
@@ -323,12 +328,12 @@ const PostEvent = () => {
                     minDate={eventData.startDate}
                     required
                   />
-                  {errors.endDate && <span className="text-error text-sm">{errors.endDate}</span>}
+                  {errors.endDate && <span className="text-error text-sm">{t('postEvent.endDate')} {errors.endDate}</span>}
                 </div>
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Submission Deadline:</span>
+                    <span className="label-text">{t('postEvent.submissionDeadline')}:</span>
                   </label>
                   <DatePicker
                     selected={eventData.submissionDeadline}
@@ -340,7 +345,7 @@ const PostEvent = () => {
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Sub-theme Deadline:</span>
+                    <span className="label-text">{t('postEvent.subThemeDeadline')}:</span>
                   </label>
                   <DatePicker
                     selected={eventData.subThemeDeadline}
@@ -352,7 +357,7 @@ const PostEvent = () => {
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Registration Deadline:</span>
+                    <span className="label-text">{t('postEvent.registrationDeadline')}:</span>
                   </label>
                   <DatePicker
                     selected={eventData.registrationDeadline}
@@ -370,13 +375,13 @@ const PostEvent = () => {
             <div className="card-body">
               <h2 className="card-title flex items-center gap-2">
                 <MapPin className="text-primary" />
-                Location
+                {t('postEvent.location')}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Format*</span>
+                    <span className="label-text">{t('postEvent.format')}*</span>
                   </label>
                   <select
                     name="format"
@@ -385,19 +390,19 @@ const PostEvent = () => {
                     className={`select select-bordered ${errors.format ? 'select-error' : ''}`}
                     required
                   >
-                    <option value="">Select a format</option>
+                    <option value="">{t('postEvent.selectFormat')}</option>
                     {formatOptions.map(format => (
                       <option key={format} value={format}>{format}</option>
                     ))}
                   </select>
-                  {errors.format && <span className="text-error text-sm">{errors.format}</span>}
+                  {errors.format && <span className="text-error text-sm">{t('postEvent.format')} {errors.format}</span>}
                 </div>
 
                 {eventData.format !== 'Online' && (
                   <>
                     <div className="form-control flex flex-col gap-1">
                       <label className="label">
-                        <span className="label-text">Location*</span>
+                        <span className="label-text">{t('postEvent.locationPlaceholder')}*</span>
                       </label>
                       <input
                         type="text"
@@ -407,12 +412,12 @@ const PostEvent = () => {
                         className={`input input-bordered ${errors.location ? 'input-error' : ''}`}
                         required
                       />
-                      {errors.location && <span className="text-error text-sm">{errors.location}</span>}
+                      {errors.location && <span className="text-error text-sm">{t('postEvent.locationPlaceholder')} {errors.location}</span>}
                     </div>
 
                     <div className="form-control flex flex-col gap-1">
                       <label className="label">
-                        <span className="label-text">City*</span>
+                        <span className="label-text">{t('postEvent.city')}*</span>
                       </label>
                       <input
                         type="text"
@@ -422,14 +427,14 @@ const PostEvent = () => {
                         className={`input input-bordered ${errors.city ? 'input-error' : ''}`}
                         required
                       />
-                      {errors.city && <span className="text-error text-sm">{errors.city}</span>}
+                      {errors.city && <span className="text-error text-sm">{t('postEvent.city')} {errors.city}</span>}
                     </div>
                   </>
                 )}
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Language*</span>
+                    <span className="label-text">{t('postEvent.language')}*</span>
                   </label>
                   <select
                     name="language"
@@ -446,7 +451,7 @@ const PostEvent = () => {
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Event Website URL</span>
+                    <span className="label-text">{t('postEvent.eventWebsite')}</span>
                   </label>
                   <input
                     type="string"
@@ -461,7 +466,7 @@ const PostEvent = () => {
               {(eventData.format === 'Face-to-face' || eventData.format === 'Hybrid') && (
                 <div className="mt-4">
                   <label className="label">
-                    <span className="label-text">Select Location on Map</span>
+                    <span className="label-text">{t('postEvent.selectLocation')}</span>
                   </label>
                   <LocationMap
                     onLocationSelect={({ lat, lng }) => {
@@ -486,13 +491,13 @@ const PostEvent = () => {
             <div className="card-body">
               <h2 className="card-title flex items-center gap-2">
                 <GraduationCap className="text-primary" />
-                Academic Information
+                {t('postEvent.academicInfo')}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Scientific Field*</span>
+                    <span className="label-text">{t('postEvent.scientificField')}*</span>
                   </label>
                   <select
                     name="scientificField"
@@ -501,17 +506,17 @@ const PostEvent = () => {
                     className={`select select-bordered ${errors.scientificField ? 'select-error' : ''}`}
                     required
                   >
-                    <option value="">Select a field</option>
+                    <option value="">{t('postEvent.selectField')}</option>
                     {scientificFieldOption.map(field => (
                       <option key={field} value={field}>{field}</option>
                     ))}
                   </select>
-                  {errors.scientificField && <span className="text-error text-sm">{errors.scientificField}</span>}
+                  {errors.scientificField && <span className="text-error text-sm">{t('postEvent.scientificField')} {errors.scientificField}</span>}
                 </div>
 
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Theme*</span>
+                    <span className="label-text">{t('postEvent.theme')}*</span>
                   </label>
                   <input
                     type="text"
@@ -521,12 +526,12 @@ const PostEvent = () => {
                     className={`input input-bordered ${errors.theme ? 'input-error' : ''}`}
                     required
                   />
-                  {errors.theme && <span className="text-error text-sm">{errors.theme}</span>}
+                  {errors.theme && <span className="text-error text-sm">{t('postEvent.theme')} {errors.theme}</span>}
                 </div>
 
                 <div className="form-control flex flex-col gap-1 col-span-1 md:col-span-2">
                   <label className="label">
-                    <span className="label-text">Target Audience:</span>
+                    <span className="label-text">{t('postEvent.targetAudience')}:</span>
                   </label>
                   <div className="flex flex-wrap gap-4">
                     {audienceOptions.map(audience => (
@@ -553,13 +558,13 @@ const PostEvent = () => {
             <div className="card-body">
               <h2 className="card-title flex items-center gap-2">
                 <Users className="text-primary" />
-                Organizer Information
+                {t('postEvent.organizerInfo')}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control flex flex-col gap-1">
                   <label className="label">
-                    <span className="label-text">Organizer Name*</span>
+                    <span className="label-text">{t('postEvent.organizerName')}*</span>
                   </label>
                   <input
                     type="text"
@@ -569,14 +574,14 @@ const PostEvent = () => {
                     className={`input input-bordered ${errors.organizer ? 'input-error' : ''}`}
                     required
                   />
-                  {errors.organizer && <span className="text-error text-sm">{errors.organizer}</span>}
+                  {errors.organizer && <span className="text-error text-sm">{t('postEvent.organizerName')} {errors.organizer}</span>}
                 </div>
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Tags</span>
+                    <span className="label-text">{t('postEvent.tags')}</span>
                   </label>
-                  <Select
+                  <CreatableSelect
                     isMulti
                     options={tagOptions}
                     value={eventData.tags}
@@ -585,6 +590,16 @@ const PostEvent = () => {
                     }
                     className="react-select-container"
                     classNamePrefix="react-select"
+                    formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
+                    onCreateOption={(inputValue) => {
+                      const newOption = { value: inputValue, label: inputValue };
+                      setEventData(prev => ({
+                        ...prev,
+                        tags: [...prev.tags, newOption]
+                      }));
+                    }}
+                    menuPortalTarget={document.body}
+                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                   />
                 </div>
               </div>
@@ -597,7 +612,7 @@ const PostEvent = () => {
               onClick={() => navigate('/')}
               className="btn btn-ghost"
             >
-              Cancel
+              {t('postEvent.cancel')}
             </button>
             <button
               type="submit"
@@ -607,9 +622,9 @@ const PostEvent = () => {
               {isSubmitting ? (
                 <>
                   <span className="loading loading-spinner"></span>
-                  Submitting...
+                  {t('postEvent.submitting')}
                 </>
-              ) : 'Submit Event'}
+              ) : t('postEvent.submitEvent')}
             </button>
           </div>
         </form>

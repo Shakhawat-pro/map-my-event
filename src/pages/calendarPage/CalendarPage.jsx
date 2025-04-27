@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import "./calendar.css";
+import esLocale from '@fullcalendar/core/locales/es';
+import frLocale from '@fullcalendar/core/locales/fr';
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { AuthContext } from "../../context/AuthContext";
 import { FaEye, FaTrashAlt } from "react-icons/fa";
@@ -9,13 +11,17 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const EventCalendar = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("calendar");
   const navigate = useNavigate();
+  const currentLanguage = i18n.language;
+
   const [modal, setModal] = useState({
     visible: false,
     title: "",
@@ -31,7 +37,7 @@ const EventCalendar = () => {
     queryKey: ['favoriteEvents', user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
-      const response = await axiosPublic.get(`/users/${user.email}/favorites`);
+      const response = await axiosSecure.get(`/users/${user.email}/favorites`);
       return response?.data?.data?.map(event => ({
         _id: event._id,
         title: event.title,
@@ -49,9 +55,7 @@ const EventCalendar = () => {
         textColor: "#ffffff"
       })) || [];
     },
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    refetchOnWindowFocus: false,
-    enabled: !!user?.email // Only fetch when user is available
+    enabled: !!user?.email
   });
 
   const getEventColor = (status) => {
@@ -67,10 +71,10 @@ const EventCalendar = () => {
     const { title, start, end, extendedProps } = info.event;
     setModal({
       visible: true,
-      title,
+      title: typeof title === 'object' ? title : { en: title, fr: title }, // Handle both string and object titles
       start,
       end,
-      description: extendedProps.description,
+      description: typeof extendedProps.description === 'object' ? extendedProps.description : { en: extendedProps.description, fr: extendedProps.description },
       location: extendedProps.location,
       statusBadge: extendedProps.statusBadge
     });
@@ -80,6 +84,13 @@ const EventCalendar = () => {
 
   const viewEvent = (id) => {
     navigate(`/event/${id}`);
+  };
+
+  // Helper function to get localized text
+  const getLocalizedText = (text) => {
+    if (!text) return '';
+    if (typeof text === 'string') return text;
+    return text[currentLanguage] || text.en || '';
   };
 
   return (
@@ -117,11 +128,15 @@ const EventCalendar = () => {
                 <FullCalendar
                   plugins={[dayGridPlugin]}
                   initialView="dayGridMonth"
-                  events={events}
+                  events={events.map(event => ({
+                    ...event,
+                    title: getLocalizedText(event.title) // Localize title for calendar display
+                  }))}
                   eventClick={handleEventClick}
                   displayEventTime={false}
                   height="auto"
-                
+                  locales={[esLocale, frLocale]}
+                  locale={currentLanguage}
                 />
               )}
 
@@ -134,7 +149,9 @@ const EventCalendar = () => {
                     className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full text-center"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <h3 className="text-xl font-semibold mb-4">{modal.title}</h3>
+                    <h3 className="text-xl font-semibold mb-4">
+                      {getLocalizedText(modal.title)}
+                    </h3>
                     <div className="flex justify-center mb-2">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${modal.statusBadge === "Upcoming"
                         ? "bg-blue-100 text-blue-800"
@@ -148,7 +165,9 @@ const EventCalendar = () => {
                     <p className="mb-2">{t('calendar.start_date')}: {modal.start.toLocaleDateString()}</p>
                     {modal.end && <p className="mb-2">{t('calendar.end_date')}: {modal.end.toLocaleDateString()}</p>}
                     <p className="mb-2">{t('calendar.location')}: {modal.location}</p>
-                    <p className="mb-4 text-sm text-gray-600">{modal.description}</p>
+                    <p className="mb-4 text-sm text-gray-600">
+                      {getLocalizedText(modal.description)}
+                    </p>
                     <button
                       onClick={closeModal}
                       className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
@@ -184,8 +203,10 @@ const EventCalendar = () => {
                       {events.map((event, index) => (
                         <tr key={index} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{event.title}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.extendedProps?.location}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                            {getLocalizedText(event.title)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{event.extendedProps?.location || "Online"}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm ">{new Date(event.start).toLocaleDateString()}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm ">
                             <div><span className="font-semibold">{t('calendar.sub_theme')}:</span> {event.subThemeDeadline ? new Date(event.subThemeDeadline).toLocaleDateString() : "N/A"}</div>

@@ -16,11 +16,17 @@ const Toast = Swal.mixin({
   timerProgressBar: true,
 });
 
-const EventCard = ({ event, setSelectedEvent, currentUser }) => {
-  const { t } = useTranslation();
+const EventCard = ({ event, setSelectedEvent, currentUser, favoritesId, }) => {
+  const { t, i18n  } = useTranslation();
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const [isFavorite, setIsFavorite] = useState(false);
+  // console.log(isFavorite);
+
+  const language = i18n.language;  // To track current language
+
+  
+  
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
 
   // Memoize formatted dates to avoid recalculating on every render
@@ -30,66 +36,58 @@ const EventCard = ({ event, setSelectedEvent, currentUser }) => {
   }, [event?.startDate, event?.endDate, t]);
 
   // Memoize the favorite check function
-  const checkIfFavorite = useCallback(async () => {
+  const checkIfFavorite = useCallback(() => {
     if (!currentUser?.email || !event?._id) return;
+    console.log(currentUser?.email, event._id);
     
-    try {
-      const response = await axiosPublic.get(`/users/${currentUser.email}/favorites`);
-      const favorites = response.data.data || [];
-      setIsFavorite(favorites.some(fav => fav._id === event._id));
-    } catch (error) {
-      console.error('Error checking favorites:', error);
-    }
-  }, [axiosPublic, currentUser?.email, event?._id]);
+    setIsFavorite(favoritesId.includes(event._id));
+  }, [currentUser?.email, event._id, favoritesId]);
 
   useEffect(() => {
     checkIfFavorite();
   }, [checkIfFavorite]);
 
-  const toggleFavorite = useCallback(async (e) => {
-    e?.stopPropagation();
-    
-    if (!currentUser?.email) {
-      Swal.fire({
-        icon: "error",
-        title: t('event_card.login_required'),
-        text: t('event_card.login_prompt'),
-        buttonsStyling: false,
-        confirmButtonText: `<span class="text-white btn-grad btn rounded-md hover:scale-110">OK</span>`,
-      });
-      return;
-    }
-
-    setIsFavoriteLoading(true);
-    try {
-      const newFavoriteState = !isFavorite;
-      setIsFavorite(newFavoriteState);
-
-      if (newFavoriteState) {
-        await axiosPublic.post(`/users/${currentUser.email}/favorites`, {
-          eventId: event._id
+  const handleToggleFavorite = useCallback(async () => {
+      if (!currentUser?.email) {
+        Swal.fire({
+          icon: "error",
+          title: t('event_card.login_required'),
+          text: t('event_card.login_prompt'),
+          buttonsStyling: false,
+          confirmButtonText: `<span class="text-white btn-grad btn rounded-md hover:scale-110">OK</span>`,
         });
-      } else {
-        await axiosPublic.delete(`/users/${currentUser.email}/favorites`, {
-          data: { eventId: event._id }
-        });
+        return;
       }
-
-      Toast.fire({
-        icon: "success",
-        title: t(newFavoriteState ? 'event_card.added_to_favorites' : 'event_card.removed_from_favorites')
-      });
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
-      setIsFavorite(!isFavorite);
-      Toast.fire({
-        icon: "error",
-        title: t('event_card.update_failed')
-      });
-    } finally {
-      setIsFavoriteLoading(false);
-    }
-  }, [isFavorite, currentUser?.email, event._id, axiosPublic, t]);
+  
+      setIsFavoriteLoading(true);
+      try {
+        const newFavoriteState = !isFavorite;
+        setIsFavorite(newFavoriteState);
+  
+        if (newFavoriteState) {
+          await axiosPublic.post(`/users/${currentUser.email}/favorites`, { eventId: event._id });
+          Toast.fire({
+            icon: "success",
+            title: t('event_card.added_to_favorites'),
+          });
+        } else {
+          await axiosPublic.delete(`/users/${currentUser.email}/favorites`, { data: { eventId: event._id } });
+          Toast.fire({
+            icon: "success",
+            title: t('event_card.removed_from_favorites'),
+          });
+        }
+      } catch (error) {
+        console.error('Error toggling favorite:', error);
+        setIsFavorite(!isFavorite);
+        Toast.fire({
+          icon: "error",
+          title: t('event_card.update_failed'),
+        });
+      } finally {
+        setIsFavoriteLoading(false);
+      }
+    }, [currentUser?.email, t, axiosPublic, isFavorite, event._id]);
 
   const handleClick = useCallback(() => {
     if (event.format === "Online" || !event.coordinates) {
@@ -125,6 +123,11 @@ const EventCard = ({ event, setSelectedEvent, currentUser }) => {
     }
   }, [event.statusBadge, t]);
 
+   // Display title and description based on the current language
+   const title = event.title[language] || event.title.en; // Default to English if not available
+   const description = event.description[language] || event.description.en; // Default to English if not available
+ 
+
   return (
     <div 
       onClick={handleClick} 
@@ -141,7 +144,7 @@ const EventCard = ({ event, setSelectedEvent, currentUser }) => {
               {translatedStatus}
             </span>
             
-            <h1 className="text-xl font-bold text-gray-800">{event.title}</h1>
+            <h1 className="text-xl font-bold text-gray-800">{title}</h1>
             
             <ul className="space-y-1 mt-2">
               <li className="flex items-center">
@@ -163,7 +166,7 @@ const EventCard = ({ event, setSelectedEvent, currentUser }) => {
             <FavoriteButton 
               isFavorite={isFavorite}
               isLoading={isFavoriteLoading}
-              onClick={toggleFavorite}
+              onClick={handleToggleFavorite}
             />
             
             <button
@@ -179,9 +182,9 @@ const EventCard = ({ event, setSelectedEvent, currentUser }) => {
         </div>
 
         <p className="text-gray-600 my-2 ml-1">
-          {event.description.length > 100 
-            ? `${event.description.slice(0, 100)}...` 
-            : event.description}
+          {description.length > 100 
+            ? `${description.slice(0, 100)}...` 
+            : description}
         </p>
 
         <div className="flex flex-wrap gap-1">
@@ -209,7 +212,7 @@ const EventCard = ({ event, setSelectedEvent, currentUser }) => {
           <FavoriteButton 
             isFavorite={isFavorite}
             isLoading={isFavoriteLoading}
-            onClick={toggleFavorite}
+            onClick={handleToggleFavorite}
             size="sm"
           />
         </div>
@@ -245,24 +248,9 @@ const FavoriteButton = ({ isFavorite, isLoading, onClick, size = "md" }) => {
 const formatEventDates = (startDate, endDate) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
-
-  if (startDate === endDate) {
-    return start.toLocaleString('default', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  }
-
-  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
-    const month = start.toLocaleString('default', { month: 'long' });
-    const startDay = start.getDate();
-    const endDay = end.getDate();
-    const year = start.getFullYear();
-    return `${month} ${startDay}–${endDay}, ${year}`;
-  }
-
-  return `${start.toLocaleDateString()} – ${end.toLocaleDateString()}`;
+  const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+  
+  return `${start.toLocaleDateString(undefined, options)} - ${end.toLocaleDateString(undefined, options)}`;
 };
 
-export default React.memo(EventCard);
+export default EventCard;

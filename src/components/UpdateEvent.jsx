@@ -5,6 +5,7 @@ import { Calendar, MapPin, Users, Globe, Tag, Clock, BookOpen, GraduationCap } f
 import Select from "react-select";
 import Swal from 'sweetalert2';
 import LocationMap from './LocationMap';
+import { useTranslation } from 'react-i18next';
 
 const tagOptions = [
   "Networking", "Keynote", "Innovation", "Tech", "Business",
@@ -12,10 +13,14 @@ const tagOptions = [
 ].map(tag => ({ value: tag, label: tag }));
 
 const UpdateEvent = ({ event, onCancel, onSubmit }) => {
+    const {i18n } = useTranslation();
+  
+  const language = i18n.language;  // To track current language
+
   const [eventData, setEventData] = useState({
-    title: event?.title || '',
-    description: event?.description || '',
-    detailDescription: event?.detailDescription || '',
+    title: event?.title[language] || event?.title.en,
+    description: event?.description[language] || '',
+    detailDescription: event?.detailDescription[language] || '',
     eventType: event?.eventType || 'Conference',
     startDate: event?.startDate ? new Date(event.startDate) : null,
     endDate: event?.endDate ? new Date(event.endDate) : null,

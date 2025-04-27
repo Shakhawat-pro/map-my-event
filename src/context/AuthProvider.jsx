@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import supabase from '../utils/supabase';
-import { AuthContext } from './AuthContext';
 import useAxiosPublic from '../hooks/useAxiosPublic';
+import { AuthContext } from './AuthContext';
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     // console.log('supabase user:', user);
-    
+
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
 
@@ -49,40 +49,55 @@ const AuthProvider = ({ children }) => {
         if (error) throw error;
     };
 
-    // Handle auth state changes
-    useEffect(() => {
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            const userData = session?.user?.user_metadata || null;
-            setUser(userData);
-
-            setLoading(false);
-            if (userData?.email) {
-                try {
-                    const res = await axiosPublic.get(`/users/${userData.email}`);
-                    if (!res.data) {
-                        // User doesn't exist in MongoDB, create a new user in MongoDB
-                        const newUser = {
-                            email: userData.email,
-                            name: userData.full_name,
-                            profilePicture: userData.avatar_url,
-                        };
-                        await axiosPublic.post('/users/create-user', newUser);
-                        console.log('User saved to MongoDB');
-                    } else {
-                        console.log('User already exists in MongoDB');
-                        // console.log('User data from MongoDB:', res.data.data);
-                        setUser(res.data.data);
-                    }
-                } catch (err) {
-                    console.error('Error checking/saving user:', err);
-                }
+// Handle auth state changes
+useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      const userData = session?.user?.user_metadata || null;
+      setUser(userData);
+      setLoading(true); // We start loading here because a request is happening
+  
+      if (userData?.email) {
+        try {
+          // 1. Get JWT token
+          const userInfo = { email: userData.email };
+          const tokenResponse = await axiosPublic.post('/users/jwt', userInfo);
+  
+          if (tokenResponse.data.token) {
+            localStorage.setItem('access-token', tokenResponse.data.token);
+  
+            // 2. Check if user exists in MongoDB
+            const res = await axiosPublic.get(`/users/${userData.email}`);
+            if (!res.data) {
+              // User doesn't exist, create it
+              const newUser = {
+                email: userData.email,
+                name: userData.full_name,
+                profilePicture: userData.avatar_url,
+              };
+              await axiosPublic.post('/users/create-user', newUser);
+              console.log('User saved to MongoDB');
+            } else {
+              console.log('User already exists in MongoDB');
+              setUser(res.data.data);
             }
-        });
-
-        return () => {
-            subscription?.unsubscribe();
-        };
-    }, [axiosPublic]);
+          }
+        } catch (err) {
+          console.error('Error during auth flow:', err);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        // No user, remove token
+        localStorage.removeItem('access-token');
+        setLoading(false);
+      }
+    });
+  
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [axiosPublic]);
+  
 
     const authInfo = {
         user,

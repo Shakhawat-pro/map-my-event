@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import { LanguageContext } from '../context/LanguageContex';
+import useAdmin from '../hooks/useAdmin';
 
 
 const Navbar = () => {
@@ -12,11 +13,15 @@ const Navbar = () => {
   const { t } = useTranslation();
   const { currentLanguage, toggleLanguage } = useContext(LanguageContext);
 
+  const { isAdmin } = useAdmin()
+  console.log(isAdmin);
+
+
   const navLink = <>
     <li ><NavLink to={'/'} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.home')}</NavLink></li>
     <li ><NavLink to={'map'} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.find_event')}</NavLink></li>
-    <li ><NavLink to={"calender"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.calendar')}</NavLink></li>
-    <li ><NavLink to={"dashboard"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent hidden"}>{t('common.dashboard')}</NavLink></li>
+    <li ><NavLink to={"calendar"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent "}>{t('common.calendar')}</NavLink></li>
+    {isAdmin && <li ><NavLink to={"dashboard"} className={"max-lg:btn max-lg:bg-white max-lg:rounded-lg border-2 border-transparent"}>{t('common.dashboard')}</NavLink></li>}
   </>
 
   return (
@@ -105,8 +110,8 @@ const Navbar = () => {
           </div>
           {user !== null ?
             <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow gap-1">
-              <li className='btn'><NavLink to={'/profile'}>{t('common.profile')}</NavLink></li>
-              <li className='btn' onClick={logOut}><a>{t('common.logout')}</a></li>
+              <li ><NavLink to={'/profile'} className='btn'>{t('common.profile')}</NavLink></li>
+              <li onClick={logOut}><a className='btn'>{t('common.logout')}</a></li>
             </ul> :
             <ul tabIndex={0} className="menu menu-md dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-2xl border-1 border-base-300 gap-1" >
               <li><NavLink to={'/login'} className='btn' >{t('common.login')}</NavLink></li>
