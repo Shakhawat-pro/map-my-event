@@ -244,6 +244,14 @@ const EventDetails = () => {
             <div className="card bg-base-200">
               <div className="card-body">
                 <h3 className="card-title">{t('event_details.more_info')}</h3>
+                <div className="mb-4">
+                  <h4 className="font-medium mb-2">Target Audience:</h4>
+                  <ul className="list-disc pl-5">
+                    {event.targetAudience.map((audience, index) => (
+                      <li key={index}>{audience}</li>
+                    ))}
+                  </ul>
+                </div>
                 <a href={event?.link} target="_blank" rel="noopener noreferrer" className="link link-primary block mb-4">
                   {t('event_details.visit_website')}
                 </a>

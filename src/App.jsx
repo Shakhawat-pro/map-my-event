@@ -20,7 +20,7 @@ const App = () => {
         {!hideNavbar && <Navbar />}
         <Outlet></Outlet>
         <CookieConsentBanner />
-        <Footer></Footer>
+        {!hideNavbar && <Footer></Footer>}
       </div>
     </LanguageProvider>
 

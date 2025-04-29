@@ -5,7 +5,7 @@ import { LanguageContext } from './LanguageContex';
 
 export const LanguageProvider = ({ children }) => {
   const { i18n } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'en');
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language );
   
   const changeLanguage = React.useCallback((lang) => {
     i18n.changeLanguage(lang);
@@ -16,8 +16,12 @@ export const LanguageProvider = ({ children }) => {
   useEffect(() => {
     // Set initial language from localStorage or browser
     const savedLang = localStorage.getItem('i18nextLng');
-    if (savedLang && savedLang !== currentLanguage) {
-      changeLanguage(savedLang);
+    if (savedLang) {
+      if (savedLang !== currentLanguage) {
+        changeLanguage(savedLang);
+      }
+    } else {
+      changeLanguage('fr'); // default to French
     }
   }, [changeLanguage, currentLanguage]);
 

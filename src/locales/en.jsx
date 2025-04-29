@@ -264,6 +264,16 @@ export default {
     }
   },
 
+  cookiePopup: {
+    title: "Cookie settings",
+    description: "We use <strong>cookies</strong> to provide you with the best possible experience. They also allow us to analyze user behavior in order to constantly improve the website for you.",
+    privacyPolicy: "Privacy Policy",
+    essentialLabel: "Essential (Authentication, Session, Language)",
+    analyticsLabel: "Analytics",
+    acceptAll: "Accept All",
+    acceptEssential: "Only Essentials"
+  },
+
   cookie_policy: {
     title: "Cookie Policy – ConfMap",
     last_updated: "Last updated: April 2025",

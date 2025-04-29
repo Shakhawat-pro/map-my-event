@@ -87,7 +87,7 @@ const HomePage = () => {
               ) : (
                 upcomingEvents.map((item, index) => (
                   <SwiperSlide key={index}>
-                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title[language]}</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title[language] || item.title.fr}</h2>
                     <p className="text-base text-gray-600">{item.date}</p>
                   </SwiperSlide>
                 ))
@@ -117,7 +117,7 @@ const HomePage = () => {
               ) : (
                 topics.map((item, index) => (
                   <SwiperSlide key={index}>
-                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title[language]}</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title[language] || item.title.fr}</h2>
                   </SwiperSlide>
                 ))
               )}
@@ -146,7 +146,7 @@ const HomePage = () => {
               ) : (
                 deadlines.map((item, index) => (
                   <SwiperSlide key={index} className="mb-4">
-                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title[language]}</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-1">{item.title[language] || item.title.fr}</h2>
                     <p className="text-base text-gray-600">{item.deadline}</p>
                   </SwiperSlide>
                 )))}

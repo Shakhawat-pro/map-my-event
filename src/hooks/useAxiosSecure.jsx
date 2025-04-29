@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export const axiosSecure = axios.create({
-    // baseURL: "http://localhost:5000/api",
-    baseURL: "https://map-server-brown.vercel.app/api",
+    baseURL: "http://localhost:5000/api",
+    // baseURL: "https://map-server-brown.vercel.app/api",
 })
 const useAxiosSecure = () => {
     const navigate = useNavigate();

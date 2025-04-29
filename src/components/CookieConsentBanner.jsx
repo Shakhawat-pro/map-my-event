@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { LanguageContext } from '../context/LanguageContex';
 
 const CookieConsentPopup = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState(false);
-
+  const { t } = useTranslation();
+  const { currentLanguage, toggleLanguage } = useContext(LanguageContext);
   useEffect(() => {
     const consent = localStorage.getItem('cookieConsent');
     if (consent === null) {
@@ -33,43 +36,55 @@ const CookieConsentPopup = () => {
   if (!showPopup) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#0000009a]  z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-[#0000009a] z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-4">Cookie settings</h2>
-        <p className="text-sm mb-6">
-          We use <strong>cookies</strong> to provide you with the best possible experience. 
-          They also allow us to analyze user behavior in order to constantly improve the website for you.
-          <Link to="/privacy-policy" className="underline ml-1">Privacy Policy</Link>
-        </p>
+        <div className='flex justify-between '>
+          <h2 className="text-2xl font-bold mb-4">{t('cookiePopup.title')}</h2>
+          <div className={`w-20 h-10 flex items-center bg-black rounded-full p-1 cursor-pointer transition-all duration-300 scale-[60%] -ml-3 -mr-3 min-[400px]:-mr-1`}
+            onClick={toggleLanguage}>
+            <div className={`w-10 h-8 flex items-center justify-center font-bold rounded-full bg-white transition-all duration-300 ${currentLanguage === 'fr' ? "translate-x-0" : "translate-x-8"}`}>
+              {currentLanguage === 'fr' ? "FR" : "EN"}
+            </div>
+            <span className={`absolute text-white font-bold transition-all duration-300 ${currentLanguage === 'fr' ? "ml-11" : "ml-2"}`}>
+              {currentLanguage === 'fr' ? "EN" : "FR"}
+            </span>
+          </div>
+        </div>
+        <p className="text-sm mb-5" dangerouslySetInnerHTML={{
+          __html: t('cookiePopup.description')
+        }} />
+        <Link to="/privacy-policy" className="underline ml-1 ">
+          {t('cookiePopup.privacyPolicy')}
+        </Link>
 
-        <div className="flex flex-col gap-4 mb-6">
+        <div className="flex flex-col gap-4 mb-6 mt-2">
           <div className="flex items-center gap-2">
             <input type="checkbox" checked disabled className="w-5 h-5" />
-            <label className="text-sm font-medium">Essential (Authentication, Session, Language )</label>
+            <label className="text-sm font-medium">{t('cookiePopup.essentialLabel')}</label>
           </div>
           <div className="flex items-center gap-2">
-            <input 
-              type="checkbox" 
-              checked={analyticsConsent} 
-              onChange={() => setAnalyticsConsent(!analyticsConsent)} 
-              className="w-5 h-5" 
+            <input
+              type="checkbox"
+              checked={analyticsConsent}
+              onChange={() => setAnalyticsConsent(!analyticsConsent)}
+              className="w-5 h-5"
             />
-            <label className="text-sm">Analytics</label>
+            <label className="text-sm">{t('cookiePopup.analyticsLabel')}</label>
           </div>
         </div>
 
         <div className="flex gap-4">
-          <button 
+          <button
             onClick={handleAcceptAll}
             className="flex-1 px-4 py-2 bg-black text-white font-semibold rounded hover:bg-gray-900"
           >
-            Accept All
+            {t('cookiePopup.acceptAll')}
           </button>
           <button
             onClick={handleAcceptEssential}
             className="flex-1 px-4 py-2 border border-black font-semibold rounded hover:bg-gray-100"
           >
-            Only Essentials
+            {t('cookiePopup.acceptEssential')}
           </button>
         </div>
       </div>

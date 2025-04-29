@@ -1,19 +1,30 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import SectionTitle from "../../components/SectionTitle";
 import useAllEvents from "../../hooks/useAllEvents";
-import { FaTrashAlt, FaCalendarAlt, FaEye, FaCheck, FaTimes } from "react-icons/fa";
+import { FaTrashAlt, FaEdit, FaEye, FaCheck, FaTimes } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useMutation } from "@tanstack/react-query";
+import UpdateEventAdmin from "../../components/UpdateEventAdmin";
+import { useTranslation } from "react-i18next";
+import { AuthContext } from "../../context/AuthContext";
+import { useQueryClient } from '@tanstack/react-query';
+
 
 const ManageEvents = () => {
+    const { t } = useTranslation();
+    const { user: currentUser } = useContext(AuthContext);
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [titleFilter, setTitleFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [badgeFilter, setBadgeFilter] = useState('');
     const { events, totalEvents, totalPages, isLoading, refetch } = useAllEvents(currentPage, 10, { title: titleFilter, status: statusFilter, statusBadge: badgeFilter });
+    const [AdminEditingEvent, setAdminEditingEvent] = useState(null);
+    const queryClient = useQueryClient();
+
 
     console.log(totalEvents);
 
@@ -26,71 +37,54 @@ const ManageEvents = () => {
         refetch(); // Always refetch after successful operation
     };
 
-    const approveEvent = (event) => {
-        Swal.fire({
-            title: "Approve this event?",
-            text: "This will make the event visible to all users",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, approve it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axiosSecure.patch(`/events/approve/${event._id}`)
-                    .then(res => {
-                        if (res.data.success) {
-                            handleSuccess();
-                            Swal.fire({
-                                title: "Approved!",
-                                text: "The event has been approved.",
-                                icon: "success"
-                            });
-                            refetch();
-                        } else {
-                            Swal.fire({
-                                title: "Error",
-                                text: res.data.message || "Failed to approve event",
-                                icon: "error"
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        Swal.fire({
-                            title: "Error",
-                            text: error.response?.data?.message || "Failed to approve event",
-                            icon: "error"
-                        });
-                    });
-            }
-        });
+    const updateMutation = useMutation({
+        mutationFn: (updatedEvent) =>
+            axiosSecure.patch(`/events/admin/${updatedEvent._id}?email=${currentUser?.email}`, updatedEvent),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['userEvents', currentUser?.email]);
+            setAdminEditingEvent(null);
+            Swal.fire(t('user_events.update_success.title'), t('user_events.update_success.message'), 'success');
+        },
+        onError: (error) => {
+            console.log(error);
+            
+            Swal.fire(t('common.error'), error.response?.data?.message || t('user_events.update_error'), 'error');
+        }
+    });
+
+    const handleEdit = (event) => {
+        setAdminEditingEvent(event);
     };
 
-    const rejectEvent = (event) => {
+    const handleCancelEdit = () => {
+        setAdminEditingEvent(null);
+    };
+    const updateEventStatus = (eventId, newStatus) => {
         Swal.fire({
-            title: "Reject this event?",
-            text: "This will remove the event from the system",
-            icon: "warning",
+            title: `Set status to ${newStatus}?`,
+            text: `This will change the event's approval status to "${newStatus}"`,
+            icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, reject it!"
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: `Yes, set to ${newStatus}`
         }).then((result) => {
             if (result.isConfirmed) {
-                axiosSecure.patch(`/events/reject/${event._id}`)
+                axiosSecure.patch(`/events/updateEventStatus/${eventId}`, { status: newStatus })
                     .then(res => {
+                        console.log(res);
                         if (res.data.success) {
                             handleSuccess();
                             Swal.fire({
-                                title: "Rejected!",
-                                text: "The event has been removed.",
-                                icon: "success"
+                                title: 'Updated!',
+                                text: `Status changed to "${newStatus}"`,
+                                icon: 'success',
                             });
                             refetch();
                         } else {
                             Swal.fire({
                                 title: "Error",
-                                text: res.data.message || "Failed to reject event",
+                                text: res.data.message || "Failed to update status",
                                 icon: "error"
                             });
                         }
@@ -98,7 +92,7 @@ const ManageEvents = () => {
                     .catch((error) => {
                         Swal.fire({
                             title: "Error",
-                            text: error.response?.data?.message || "Failed to reject event",
+                            text: error.response?.data?.message || "Failed to update status",
                             icon: "error"
                         });
                     });
@@ -150,7 +144,7 @@ const ManageEvents = () => {
         axiosSecure.patch(`/events/statusBadge/${eventId}`, { statusBadge: newStatus })
             .then(res => {
                 console.log(res);
-                
+
                 if (res.status == 200) {
                     handleSuccess();
                     Swal.fire({
@@ -186,6 +180,17 @@ const ManageEvents = () => {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
+
+
+    if (AdminEditingEvent) {
+        return (
+            <UpdateEventAdmin
+                event={AdminEditingEvent}
+                onCancel={handleCancelEdit}
+                onSubmit={(updatedEvent) => updateMutation.mutate(updatedEvent)}
+            />
+        );
+    }
 
     return (
         <div className="max-w-screen-xl p-3 sm:w-10/12 mx-auto">
@@ -249,17 +254,30 @@ const ManageEvents = () => {
                                     {events.map((event, index) => (
                                         <tr key={event._id}>
                                             <th>{(currentPage - 1) * 10 + index + 1}</th>
-                                            <td className="font-bold">{event.title.en}</td>
-                                            <td>{event.location}</td>
+                                            <td className="flex flex-col">
+                                                <span className="font-bold mb-1.5">  {event.title.en}</span>
+                                                ( {event.submittedBy} )
+
+                                            </td>
+                                            <td>
+                                                {event.location || "Online"}
+                                            </td>
                                             <td>{new Date(event.startDate).toLocaleDateString()}</td>
+                                            {/* Replace the approve/reject buttons with this dropdown */}
                                             <td className=" ">
-                                                <span className={`badge ${event.status === 'approved' ?
-                                                    'bg-emerald-100 text-emerald-800' :
-                                                    event.status === 'pending' ?
-                                                        'bg-amber-100 text-amber-800' :
-                                                        'bg-rose-100 text-rose-800'}`}>
-                                                    {event.status}
-                                                </span>
+                                                <select
+                                                    className={`px-3 py-1.5 rounded-md text-sm font-semibold focus:outline-none focus:ring-2
+                                                               ${event.status === 'approved' && 'bg-emerald-100 text-emerald-800'}
+                                                               ${event.status === 'pending' && 'bg-amber-100 text-amber-800'}
+                                                              ${event.status === 'rejected' && 'bg-rose-100 text-rose-800'}
+                                                              `}
+                                                    value={event.status}
+                                                    onChange={(e) => updateEventStatus(event._id, e.target.value)}
+                                                >
+                                                    <option value="pending">Pending</option>
+                                                    <option value="approved">Approved</option>
+                                                    <option value="rejected">Rejected</option>
+                                                </select>
                                             </td>
                                             <td className=" ">
                                                 <select
@@ -288,24 +306,13 @@ const ManageEvents = () => {
                                                     >
                                                         <FaEye />
                                                     </button>
-                                                    {event.status === 'pending' && (
-                                                        <>
-                                                            <button
-                                                                onClick={() => approveEvent(event)}
-                                                                className="btn btn-sm bg-green-100 text-green-800 hover:bg-green-200"
-                                                                title="Approve"
-                                                            >
-                                                                <FaCheck />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => rejectEvent(event)}
-                                                                className="btn btn-sm bg-orange-100 text-orange-800 hover:bg-orange-200"
-                                                                title="Reject"
-                                                            >
-                                                                <FaTimes />
-                                                            </button>
-                                                        </>
-                                                    )}
+                                                    <button
+                                                        onClick={() => handleEdit(event)}
+                                                        className="btn btn-sm bg-green-100 text-green-800 hover:bg-green-200"
+                                                        title="Edit"
+                                                    >
+                                                        <FaEdit />
+                                                    </button>
                                                     <button
                                                         onClick={() => deleteEvent(event._id)}
                                                         className="btn btn-sm bg-red-100 text-red-800 hover:bg-red-200"
@@ -313,6 +320,7 @@ const ManageEvents = () => {
                                                     >
                                                         <FaTrashAlt />
                                                     </button>
+
                                                 </div>
                                             </td>
 
@@ -331,6 +339,7 @@ const ManageEvents = () => {
                     </div>
                 )}
             </div>
+
         </div>
     );
 };
