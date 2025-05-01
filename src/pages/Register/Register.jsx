@@ -30,41 +30,49 @@ const Register = () => {
                 title: "Oops...",
                 text: "You must accept the terms and conditions to register.",
             });
+            return; // Add return to stop execution if terms not accepted
         }
         setLoading(true);
         const fullName = e.target.fullName.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
+        
         try {
-            // 1. Upload image to Cloudinary
-            const formData = new FormData();
-            formData.append("file", selectedFile);
-            formData.append("upload_preset", "unsigned_upload"); // Your Cloudinary preset
-            const cloudinaryRes = await axios.post(
-                "https://api.cloudinary.com/v1_1/dsgzlelwc/image/upload", // Cloudinary API endpoint
-                formData
-            );
-            const imageUrl = cloudinaryRes.data.secure_url;
-            console.log("Image uploaded:", imageUrl);
-            // 2. Register user with Supabase
-            const { data, error } = await supabase.auth.signUp({
+            let imageUrl = null;
+            
+            // Only upload to Cloudinary if a file is selected
+            if (selectedFile) {
+                const formData = new FormData();
+                formData.append("file", selectedFile);
+                formData.append("upload_preset", "ml_default");
+                const cloudinaryRes = await axios.post(
+                    "https://api.cloudinary.com/v1_1/dpcmhdncs/image/upload",
+                    formData
+                );
+                imageUrl = cloudinaryRes.data.secure_url;
+                // console.log("Image uploaded:", imageUrl);
+            }
+    
+            // Register user with Supabase
+            const userData = {
                 email,
                 password,
                 options: {
                     data: {
                         full_name: fullName,
-                        avatar_url: imageUrl,
+                        ...(imageUrl && { avatar_url: imageUrl }), // Only include avatar_url if imageUrl exists
                     },
                 },
-            });
-
+            };
+    
+            const { data, error } = await supabase.auth.signUp(userData);
+    
             if (error) {
-                throw error; // Handle the error from Supabase
+                throw error;
             }
-
-            // 3. Handle response
-            console.log("Supabase signup success:", data);
-
+    
+            // console.log("Supabase signup success:", data);
+    
             if (!data.session) {
                 Swal.fire({
                     icon: "info",
@@ -78,14 +86,14 @@ const Register = () => {
                     title: "Registered successfully",
                     text: "You are now signed in.",
                 });
-                navigate("/"); // Redirect to homepage or dashboard
+                navigate("/");
             }
         } catch (err) {
             console.error(err);
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: err,
+                text: err.message || "Registration failed", // Show error message if available
             });
         } finally {
             setLoading(false);

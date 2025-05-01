@@ -14,7 +14,7 @@ const Navbar = () => {
   const { currentLanguage, toggleLanguage } = useContext(LanguageContext);
 
   const { isAdmin } = useAdmin()
-  console.log(isAdmin);
+  // console.log(isAdmin);
 
 
   const navLink = <>
@@ -93,6 +93,7 @@ const Navbar = () => {
         </div>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 sm:h-12 sm:w-12">
+            
             {user?.profilePicture ? (
               <div className="size-12 rounded-full overflow-hidden">
                 <img

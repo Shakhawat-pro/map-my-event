@@ -6,18 +6,15 @@ import ReactPaginate from 'react-paginate';
 import { useState } from "react";
 import useAllUsers from "../../hooks/useAllUsers";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Pagination from "../../components/Pagination";
 
 const ManageUser = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({ name: '', email: '', role: '' });
   const { users, totalUsers, totalPages, isLoading, refetch } = useAllUsers(currentPage, filters);
-  console.log(users);
+  // console.log(users);
   
   const axiosSecure = useAxiosSecure();
-
-  const handlePageClick = (event) => {
-    setCurrentPage(event.selected + 1);
-  };
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -105,6 +102,9 @@ const ManageUser = () => {
     refetch();
   };
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+};
   return (
     <div className="max-w-screen-xl w-10/12 mx-auto">
       <SectionTitle heading={"All Users"} subHeading={"Manage all of your users"} />
@@ -217,19 +217,11 @@ const ManageUser = () => {
 
             {/* Pagination */}
             <div className="flex justify-center mt-4">
-              <ReactPaginate
-                previousLabel={'Previous'}
-                nextLabel={'Next'}
-                breakLabel={'...'}
-                pageCount={totalPages}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageClick}
-                containerClassName={'pagination'}
-                activeClassName={'active'}
-                pageClassName={'page-item'}
-                pageLinkClassName={'page-link'}
-              />
+            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={handlePageChange}
+                            />
             </div>
           </>
         )}

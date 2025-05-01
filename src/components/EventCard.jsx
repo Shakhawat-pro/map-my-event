@@ -38,7 +38,7 @@ const EventCard = ({ event, setSelectedEvent, currentUser, favoritesId, }) => {
   // Memoize the favorite check function
   const checkIfFavorite = useCallback(() => {
     if (!currentUser?.email || !event?._id) return;
-    console.log(currentUser?.email, event._id);
+    // console.log(currentUser?.email, event._id);
     
     setIsFavorite(favoritesId.includes(event._id));
   }, [currentUser?.email, event._id, favoritesId]);

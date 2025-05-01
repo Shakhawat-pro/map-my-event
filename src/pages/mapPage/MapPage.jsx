@@ -19,7 +19,7 @@ function MapPage() {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  console.log(filters);
+  // console.log(filters);
 
 
   const { events, pagination, error, isLoading } = useApprovedEvents(filters, page, limit);

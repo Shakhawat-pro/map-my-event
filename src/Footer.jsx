@@ -13,11 +13,7 @@ const Footer = () => {
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center">
-              <img
-                src="/logo.png"
-                alt="ConfMap Logo"
-                className="h-8 w-auto"
-              />
+              <img src="/logo.png" alt="ConfMap Logo" className="h-8 w-auto" />
             </div>
             <p className="text-gray-600">
               {t('footer.tagline')}
@@ -54,7 +50,7 @@ const Footer = () => {
               </li>
               <li>
                 <NavLink to="/calendar" className="text-gray-600 hover:text-primary">
-                {t('footer.calendar')}
+                  {t('footer.calendar')}
                 </NavLink>
               </li>
               <li>
@@ -75,7 +71,7 @@ const Footer = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/privacy" className="text-gray-600 hover:text-primary">
+                <NavLink to="/privacy-policy" className="text-gray-600 hover:text-primary">
                   {t('footer.privacy')}
                 </NavLink>
               </li>
@@ -84,10 +80,11 @@ const Footer = () => {
                   {t('footer.cookie')}
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/contact" className="text-gray-600 hover:text-primary">
-                  {t('footer.contact')}
-                </NavLink>
+              <li className="text-gray-600">
+                {t('footer.contact')}:&nbsp;
+                <a href="mailto:contact@confmap.fr" className="text-primary hover:underline">
+                  contact@confmap.fr
+                </a>
               </li>
             </ul>
           </div>

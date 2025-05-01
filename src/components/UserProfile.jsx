@@ -1,4 +1,4 @@
-import { useContext, useState,  } from 'react';
+import { useContext, useState, } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AdvancedImage } from '@cloudinary/react';
 import { Cloudinary } from '@cloudinary/url-gen';
@@ -6,8 +6,8 @@ import { fill } from '@cloudinary/url-gen/actions/resize';
 import supabase from '../utils/supabase';
 import { useTranslation } from 'react-i18next';
 import useAxiosSecure from '../hooks/useAxiosSecure';
-import useAxiosPublic from '../hooks/useAxiosPublic';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 const cld = new Cloudinary({
   cloud: {
@@ -17,10 +17,9 @@ const cld = new Cloudinary({
 
 const UserProfile = () => {
   const { t } = useTranslation();
-  
+
   const { user: currentUser } = useContext(AuthContext)
   const axiosSecure = useAxiosSecure();
-  const axiosPublic = useAxiosPublic();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
@@ -56,14 +55,14 @@ const UserProfile = () => {
   const updateMutation = useMutation({
     mutationFn: async (updatedData) => {
       await axiosSecure.patch(`/users/profile/${currentUser?.email}`, updatedData);
-      
+
       if (updatedData.name || updatedData.profilePicture) {
         await supabase.auth.updateUser({
           data: {
             full_name: updatedData.name || user.name,
             avatar_url: updatedData.profilePicture || user.profilePicture
           }
-        });        
+        });
       }
     },
     onSuccess: () => {
@@ -83,11 +82,11 @@ const UserProfile = () => {
 
     const uploadData = new FormData();
     uploadData.append('file', file);
-    uploadData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+    uploadData.append('upload_preset', "ml_default");
 
     try {
-      const res = await axiosPublic.post(
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/dpcmhdncs/image/upload`,
         uploadData
       );
       setImage(res.data.secure_url);
@@ -108,7 +107,7 @@ const UserProfile = () => {
 
   if (isLoading) return <div className="text-center py-8">{t('profile.loading')}</div>;
 
-  const myImage = cld.image(user.profilePicture?.split('/').pop().split('.')[0]);
+  const myImage = cld.image(user.profilePicture?.match(/\/([^/]+)\.[^.]+$/)?.[1]);
   myImage.resize(fill().width(150).height(150));
 
   return (
@@ -132,7 +131,7 @@ const UserProfile = () => {
                   {image ? (
                     <img src={image} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <AdvancedImage cldImg={myImage} className="w-full h-full object-cover" />
+                    <img className="w-full h-full object-cover object-center" src={user.profilePicture} alt="" />
                   )}
                 </div>
                 <label className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-primary text-white px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-primary-focus transition">
@@ -151,7 +150,7 @@ const UserProfile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-semibold">{t('profile.full_name')}*</span>
+                    <span className="label-text font-semibold ">{t('profile.full_name')}*</span>
                   </label>
                   <input
                     type="text"
@@ -246,7 +245,7 @@ const UserProfile = () => {
         <div className="flex flex-col md:flex-row gap-8 my-8">
           <div className="flex flex-col items-center gap-3 w-full md:w-1/3">
             <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 border-2 border-primary">
-              <AdvancedImage cldImg={myImage} className="w-full h-full object-cover" />
+              <img className="w-full h-full object-cover object-center" src={user.profilePicture} alt="" />
             </div>
             <h3 className="text-xl font-semibold">{user.name}</h3>
           </div>

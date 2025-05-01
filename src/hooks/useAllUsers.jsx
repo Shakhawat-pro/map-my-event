@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from './useAxiosSecure';
 
-const useAllUsers = (page = 1, filters = {}, limit = 5) => {
+const useAllUsers = (page = 1, filters = {}, limit = 10) => {
   const axiosSecure = useAxiosSecure();
 
   const fetchUsers = async () => {

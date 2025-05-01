@@ -25,7 +25,7 @@ const HomePage = () => {
     queryKey: ['upcomingEvents'],
     queryFn: async () => {
       const res = await axiosPublic.get('/homePage/upcoming-events');
-      console.log(res);
+      // console.log(res);
       
       return res.data.data;
     },
